@@ -69,7 +69,28 @@ with db:
     # with open('layer1_centrality.txt', 'w') as file:
     #     file.write(str(ec))
 
+    print("Fetching developers...")
+    cur.execute("SELECT DISTINCT who_id, who FROM comment")
+
+    developer = {}
+    for i in cur.fetchall():
+        developer[i[0]] = i[1]
+
+    print("Setting up excel sheet...")
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+
+    sheet.append(["Rank", "Id", "Who", "Centrality"])
+    sheet.append(["", "", "", ""])
+
     print("Ranking developers...")
 
+    rank = 1
+    for i in ec:
+        sheet.append([str(rank), i[1], developer[i[1]], i[0]])
+        rank += 1
+
+    print("Saving...")
+    wb.save("layer1_ranks.xlsx")
 
     print("Process Competed!")
