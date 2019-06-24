@@ -7,9 +7,9 @@ db = pymysql.connect(host='localhost',
                      db='master')
 
 """
-Layer 3 Network: 
+Layer 4 Network: 
 
-Edge between developers who commented on 2 different bugs which belong to same component.
+Edge between developers who commented on 2 different bugs which belong to same operating system.
 
 Dataset Used : gnomebug
 Table : bug
@@ -18,22 +18,22 @@ with db:
     print("Connected to db!")
     cur = db.cursor()
 
-    cur.execute("select distinct bug_id, component from bug")
+    cur.execute("select distinct bug_id, op_sys from bug")
 
-    comp_bug = {}
+    os_bug = {}
 
     print("Fetching and setting up dict...")
     for i in cur.fetchall():
-        if i[1].strip() not in comp_bug.keys():
-            comp_bug[i[1].strip()] = [i[0]]
+        if i[1].strip() not in os_bug.keys():
+            os_bug[i[1].strip()] = [i[0]]
         else:
-            val = comp_bug[i[1].strip()]
+            val = os_bug[i[1].strip()]
             val.append(i[0])
-            comp_bug[i[1].strip()] = val
+            os_bug[i[1].strip()] = val
 
     print("Setup succeeded!")
 
-    with open('layer3_component_bug.txt', 'w') as file:
-        file.write(json.dumps(comp_bug))
+    with open('layer4_os_bug.txt', 'w') as file:
+        file.write(json.dumps(os_bug))
 
     print("Process complete!")
