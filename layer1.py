@@ -1,14 +1,22 @@
-import json
 from itertools import permutations
 
 import pymysql
 import openpyxl
+import networkx as nx
 
 db = pymysql.connect(host='localhost',
                      user='mahen',
                      password='#imlegend19',
                      db='master')
 
+"""
+Layer 1 Network: 
+
+Edge between developers who commented on same bug.
+
+Dataset Used : gnomebug
+Table : comment
+"""
 with db:
     print("Connected to db!")
     cur = db.cursor()
@@ -37,11 +45,7 @@ with db:
 
     print("Fetched!")
 
-    print("Setting up excel sheet...")
-    wb = openpyxl.Workbook()
-    sheet = wb.active
-
-    print("Writing values to sheet...")
+    print("Setting up edges...")
     edges = set()
     for i in bug_who.values():
         if len(list(i)) > 1:
@@ -49,7 +53,23 @@ with db:
             for j in edg:
                 edges.add(j)
 
-    with open('layer1_edges.txt', 'w') as file:
-        file.write(str(edges))
+    # with open('layer1_edges.txt', 'w') as file:
+    #     file.write(str(edges))
+
+    graph = nx.DiGraph()
+    graph.add_edges_from(list(edges))
+
+    print("Calculating eigenvector centrality...")
+    centrality = nx.eigenvector_centrality(graph)
+
+    ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+    ec.reverse()
+
+    # print("Saving centrality...")
+    # with open('layer1_centrality.txt', 'w') as file:
+    #     file.write(str(ec))
+
+    print("Ranking developers...")
+
 
     print("Process Competed!")
