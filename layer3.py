@@ -33,7 +33,27 @@ with db:
 
     print("Setup succeeded!")
 
-    with open('layer3_component_bug.txt', 'w') as file:
-        file.write(json.dumps(comp_bug))
+    # with open('layer3_component_bug.txt', 'w') as file:
+    #     file.write(json.dumps(comp_bug))
+
+    comp_bug_who = {}
+
+    print("Setting up component-bug-who dict...")
+    for i in comp_bug:
+        val = comp_bug[i]
+        dic_val = []
+        for j in val:
+            try:
+                who_lst = comp_bug[j]
+                for k in who_lst:
+                    dic_val.append((j, k))
+            except KeyError:
+                pass
+        comp_bug_who[i] = dic_val
+
+    # print("Writing product_bug_who to text file...")
+    #
+    # with open('layer2_product_bug_who.txt', 'w') as file:
+    #     file.write(json.dumps(prod_bug_who))
 
     print("Process complete!")
