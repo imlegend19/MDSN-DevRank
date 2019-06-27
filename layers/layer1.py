@@ -1,13 +1,8 @@
 from itertools import permutations
 
-import pymysql
 import openpyxl
 import networkx as nx
-
-db = pymysql.connect(host='localhost',
-                     user='mahen',
-                     password='#imlegend19',
-                     db='master')
+from local_settings import db
 
 """
 Layer 1 Network: 
@@ -17,6 +12,7 @@ Edge between developers who commented on same bug.
 Dataset Used : gnomebug
 Table : comment
 """
+
 with db:
     print("Connected to db!")
     cur = db.cursor()

@@ -2,12 +2,7 @@ from datetime import datetime
 
 import networkx as nx
 import openpyxl
-import pymysql
-
-db = pymysql.connect(host='localhost',
-                     user='mahen',
-                     password='#imlegend19',
-                     db='master')
+from local_settings import db
 
 """
 Layer 3 Network: 
@@ -17,6 +12,7 @@ Edge between developers who commented on 2 different bugs which belong to same c
 Dataset Used : gnomebug
 Table : bug
 """
+
 with db:
     print("Connected to db!")
     cur = db.cursor()
