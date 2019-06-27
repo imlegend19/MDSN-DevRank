@@ -1,7 +1,9 @@
+import pickle
+from datetime import datetime
+
+import networkx as nx
 import openpyxl
 import pymysql
-import networkx as nx
-from datetime import datetime
 
 db = pymysql.connect(host='localhost',
                      user='mahen',
@@ -23,7 +25,7 @@ with db:
     product_bug = {}
 
     print("Setting up product-bug...")
-    cur.execute("SELECT product_id, bug_id FROM bug")
+    cur.execute("SELECT product_id, bug_id FROM test_bug")
 
     for i in cur.fetchall():
         if i[0] in product_bug.keys():
@@ -36,9 +38,9 @@ with db:
     print("Fetched!")
 
     # print("Writing product_bug to text file...")
-
-    # with open('layer2_product_bug.txt', 'w') as file:
-    #     file.write(json.dumps(product_bug))
+    #
+    # with open('layer2_product_bug.txt', 'wb') as file:
+    #     pickle.dump(product_bug, file)
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
@@ -72,38 +74,63 @@ with db:
 
     # print("Writing product_bug_who to text file...")
     #
-    # with open('layer2_product_bug_who.txt', 'w') as file:
-    #     file.write(json.dumps(prod_bug_who))
+    # with open('layer2_product_bug_who.txt', 'wb') as file:
+    #     pickle.dump(prod_bug_who, file)
 
     print("Clearing variables...")
 
     bug_who.clear()
     product_bug.clear()
 
+    pbw_length = {}
+    length = []
+
+    print("Calculating lengths...")
+    for i in prod_bug_who:
+        length.append(len(prod_bug_who[i]))
+        pbw_length[len(prod_bug_who[i])] = i
+
+    length.sort(reverse=True)
+    # del pbw_length[length.pop(0)]
+
+    print(length)
+
     edges = set()
 
     print("Setting up edges...")
 
     start = datetime.now().now()
-    for i in prod_bug_who:
+
+    counter = 1
+    for _ in length:
+        i = pbw_length[_]
         val = prod_bug_who[i]
-        print("Ongoing", i, "- Total Length =", len(val), "Total edges =", len(edges))
+
+        print("Ongoing =", counter, "- Product =", i, "- Total Length =", _, "- Total Edges =",
+              len(edges))
+
         for j in val:
             for k in val:
                 if j[0] != k[0]:
                     edges.add((j[1], k[1]))
+        counter += 1
 
     end = datetime.now().time()
 
     print("Start Time:", start, "End Time:", end)
 
-    print("Writing layer2 edges to text file...")
+    # print("Writing layer 2 edges to text file...")
+    #
+    # with open('layer2_edges.txt', 'wb') as file:
+    #     pickle.dump(edges, file)
 
-    with open('layer2_edges.txt', 'w') as file:
-        file.write(str(edges))
+    print("Process Successful! Total Edges =", len(edges))
 
+    print("Building graph...")
     graph = nx.DiGraph()
     graph.add_edges_from(list(edges))
+
+    print("Total edges =", len(edges))
 
     print("Calculating eigenvector centrality...")
     centrality = nx.eigenvector_centrality(graph)
@@ -135,4 +162,4 @@ with db:
     print("Saving...")
     wb.save("layer2_ranks.xlsx")
 
-    print("Process Successful!")
+    print("Process Complete!")

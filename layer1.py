@@ -43,7 +43,19 @@ with db:
         else:
             bug_who[i[0]] = {i[1]}
 
+    print("Fetching bugs from test_bug...")
+    cur.execute("SELECT bug_id FROM test_bug")
+
+    bugs = []
+    for i in cur.fetchall():
+        bugs.append(i[0])
+
     print("Fetched!")
+
+    print("Updating bug_who...")
+    for i in list(bug_who.keys()):
+        if i not in bugs:
+            del bug_who[i]
 
     print("Setting up edges...")
     edges = set()
@@ -53,8 +65,8 @@ with db:
             for j in edg:
                 edges.add(j)
 
-    # with open('layer1_edges.txt', 'w') as file:
-    #     file.write(str(edges))
+    # with open('layer1_edges.txt', 'wb') as file:
+    #     pickle.dump(edges, file)
 
     graph = nx.DiGraph()
     graph.add_edges_from(list(edges))
@@ -64,10 +76,6 @@ with db:
 
     ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
     ec.reverse()
-
-    # print("Saving centrality...")
-    # with open('layer1_centrality.txt', 'w') as file:
-    #     file.write(str(ec))
 
     print("Fetching developers...")
     cur.execute("SELECT DISTINCT who_id, who FROM comment")
