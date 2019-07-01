@@ -1,6 +1,20 @@
 import pickle
+from local_settings import db
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/"
+TOTAL = 0
+relative_ids = {}
+
+with db:
+    cur = db.cursor()
+    print("Fetching relative id's...")
+    cur.execute("SELECT id, who_id FROM who_ids_commenting_on_more_than_10_bugs")
+
+    for i in cur.fetchall():
+        relative_ids[i[1]] = i[0]
+        TOTAL += 1
+
+print("Matrix dimensions:", TOTAL, "x", TOTAL)
 
 for i in range(1, 5):
     path = RELATIVE_PATH + "layer" + str(i) + "_edges.txt"
@@ -9,23 +23,18 @@ for i in range(1, 5):
     with open(path, "rb") as fp:
         edges = pickle.load(fp)
 
-    print("Fetching relative edges...")
-    path = RELATIVE_PATH + "relative_id.txt"
-    with open(path, "rb") as fp:
-        relative_edges = pickle.load(fp)
-
-    total = len(edges)
-
     print("Creating matrix...")
     matrix = []
-    for j in range(total):
-        matrix.append([0 for _ in range(total)])
+    for j in range(TOTAL):
+        matrix.append([0 for _ in range(TOTAL)])
 
     print("Creating adjacency matrix...")
     for j in edges:
         x, y = j[0], j[1]
-        matrix[relative_edges[x]][relative_edges[y]] = 1
+        matrix[relative_ids[x]][relative_ids[y]] = 1
 
     print("Dumping matrix...")
-    with open('A1.txt', 'wb') as file:
+    with open('A' + str(i) + '.txt', 'wb') as file:
         pickle.dump(matrix, file)
+
+print("Process Complete!")
