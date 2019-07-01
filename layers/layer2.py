@@ -1,3 +1,4 @@
+import pickle
 from datetime import datetime
 
 import networkx as nx
@@ -17,10 +18,17 @@ with db:
     print("Connected to db!")
     cur = db.cursor()
 
+    print("Fetching developers...")
+    cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
+    dev = []
+
+    for i in cur.fetchall():
+        dev.append(i[0])
+
     product_bug = {}
 
     print("Setting up product-bug...")
-    cur.execute("SELECT product_id, bug_id FROM test_bug")
+    cur.execute("SELECT distinctrow product_id, bug_id FROM test_bug")
 
     for i in cur.fetchall():
         if i[0] in product_bug.keys():
@@ -39,16 +47,18 @@ with db:
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT bug_id, who_id FROM comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
     bug_who = {}
 
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
-            val = bug_who[i[0]]
-            val.add(i[1])
-            bug_who[i[0]] = val
+            if i[1] in dev:
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
         else:
-            bug_who[i[0]] = {i[1]}
+            if i[1] in dev:
+                bug_who[i[0]] = {i[1]}
 
     print("Fetched!")
 
@@ -66,11 +76,6 @@ with db:
             except KeyError:
                 pass
         prod_bug_who[i] = dic_val
-
-    # print("Writing product_bug_who to text file...")
-    #
-    # with open('layer2_product_bug_who.txt', 'wb') as file:
-    #     pickle.dump(prod_bug_who, file)
 
     print("Clearing variables...")
 
@@ -108,18 +113,25 @@ with db:
             for k in val:
                 if j[0] != k[0]:
                     edges.add((j[1], k[1]))
+
         counter += 1
 
     end = datetime.now().time()
 
     print("Start Time:", start, "End Time:", end)
 
-    # print("Writing layer 2 edges to text file...")
-    #
-    # with open('layer2_edges.txt', 'wb') as file:
-    #     pickle.dump(edges, file)
+    print("Writing layer 2 edges to text file...")
+
+    with open('layer2_edges.txt', 'wb') as file:
+        pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
+
+    for i in edges:
+        if i[0] in dev and i[1] in dev:
+            print('YES')
+        else:
+            print("NOOOOOOOO")
 
     print("Building graph...")
     graph = nx.DiGraph()

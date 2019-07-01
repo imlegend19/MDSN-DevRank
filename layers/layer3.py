@@ -1,3 +1,4 @@
+import pickle
 from datetime import datetime
 
 import networkx as nx
@@ -17,8 +18,16 @@ with db:
     print("Connected to db!")
     cur = db.cursor()
 
+    print("Fetching developers...")
+    cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
+    dev = []
+
+    for i in cur.fetchall():
+        dev.append(i[0])
+
     print("Fetching and setting up dict...")
-    cur.execute("select distinct bug_id, component from test_bug")
+    cur.execute("select distinctrow bug_id, component from test_bug "
+                "where bug_id in (select distinct bug_id from test_bug_id_updated)")
     comp_bug = {}
 
     for i in cur.fetchall():
@@ -36,16 +45,18 @@ with db:
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT bug_id, who_id FROM comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
     bug_who = {}
 
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
-            val = bug_who[i[0]]
-            val.add(i[1])
-            bug_who[i[0]] = val
+            if i[1] in dev:
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
         else:
-            bug_who[i[0]] = {i[1]}
+            if i[1] in dev:
+                bug_who[i[0]] = {i[1]}
 
     print("Fetched!")
 
@@ -63,11 +74,6 @@ with db:
             except KeyError:
                 pass
         comp_bug_who[i] = dic_val
-
-    # print("Writing component_bug_who to text file...")
-    #
-    # with open('layer3_component_bug_who.txt', 'w') as file:
-    #     file.write(json.dumps(comp_bug_who))
 
     print("Clearing variables...")
 
@@ -105,18 +111,25 @@ with db:
             for k in val:
                 if j[0] != k[0]:
                     edges.add((j[1], k[1]))
+
         counter += 1
 
     end = datetime.now().time()
 
     print("Start Time:", start, "End Time:", end)
 
-    # print("Writing layer 3 edges to text file...")
-    #
-    # with open('layer3_edges.txt', 'wb') as file:
-    #     pickle.dump(edges, file)
+    print("Writing layer 3 edges to text file...")
+
+    with open('layer3_edges.txt', 'wb') as file:
+        pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
+
+    for i in edges:
+        if i[0] in dev and i[1] in dev:
+            pass
+        else:
+            print("NOOOOOOOO")
 
     print("Building graph...")
     graph = nx.DiGraph()
@@ -134,7 +147,7 @@ with db:
         ec.reverse()
 
         print("Fetching developers...")
-        cur.execute("SELECT DISTINCT who_id, who FROM comment")
+        cur.execute("SELECT DISTINCT who_id, who FROM test_comment")
 
         developer = {}
         for i in cur.fetchall():

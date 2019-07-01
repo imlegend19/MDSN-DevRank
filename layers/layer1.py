@@ -1,3 +1,4 @@
+import pickle
 from itertools import permutations
 
 import openpyxl
@@ -17,30 +18,34 @@ with db:
     print("Connected to db!")
     cur = db.cursor()
 
-    # print("Fetching all rows...")
-    # cur.execute("SELECT * FROM comment")
-    #
-    # rows = cur.fetchall()
+    print("Fetching developers...")
+    cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
+    dev = []
+
+    for i in cur.fetchall():
+        dev.append(i[0])
 
     bug_who = {}
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT bug_id, who_id FROM comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
 
     # FMT = '%H:%M:%S'
     # start = datetime.now().time()
 
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
-            val = bug_who[i[0]]
-            val.add(i[1])
-            bug_who[i[0]] = val
+            if i[1] in dev:
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
         else:
-            bug_who[i[0]] = {i[1]}
+            if i[1] in dev:
+                bug_who[i[0]] = {i[1]}
 
     print("Fetching bugs from test_bug...")
-    cur.execute("SELECT bug_id FROM test_bug")
+    cur.execute("SELECT distinct bug_id FROM test_bug")
 
     bugs = []
     for i in cur.fetchall():
@@ -61,8 +66,16 @@ with db:
             for j in edg:
                 edges.add(j)
 
-    # with open('layer1_edges.txt', 'wb') as file:
-    #     pickle.dump(edges, file)
+    with open('layer1_edges.txt', 'wb') as file:
+        pickle.dump(edges, file)
+
+    for i in edges:
+        if i[0] in dev and i[1] in dev:
+            print('YES')
+        else:
+            print("NOOOOOOOO")
+
+    print("Saved edges! Total edges:", len(edges))
 
     graph = nx.DiGraph()
     graph.add_edges_from(list(edges))
@@ -74,7 +87,7 @@ with db:
     ec.reverse()
 
     print("Fetching developers...")
-    cur.execute("SELECT DISTINCT who_id, who FROM comment")
+    cur.execute("SELECT DISTINCT who_id, who FROM test_comment")
 
     developer = {}
     for i in cur.fetchall():
