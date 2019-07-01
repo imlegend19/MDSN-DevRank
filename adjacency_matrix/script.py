@@ -14,6 +14,19 @@ with db:
         relative_ids[i[1]] = i[0]
         TOTAL += 1
 
+
+def transpose(a):
+    b = []
+    for j in range(TOTAL):
+        b.append([0 for _ in range(TOTAL)])
+
+    for i in range(TOTAL):
+        for j in range(TOTAL):
+            b[i][j] = a[j][i]
+
+    return b
+
+
 print("Matrix dimensions:", TOTAL, "x", TOTAL)
 
 for i in range(1, 5):
@@ -33,8 +46,11 @@ for i in range(1, 5):
         x, y = j[0], j[1]
         matrix[relative_ids[x]][relative_ids[y]] = 1
 
+    print("Calculating transpose...")
+    matrix_new = transpose(matrix)
+
     print("Dumping matrix...")
     with open('A' + str(i) + '.txt', 'wb') as file:
-        pickle.dump(matrix, file)
+        pickle.dump(matrix_new, file)
 
 print("Process Complete!")
