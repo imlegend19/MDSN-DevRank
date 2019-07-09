@@ -4,3 +4,4 @@ jdcal==1.4.1
 networkx==2.3
 numpy==1.16.4
 openpyxl==2.6.2
+PyMySQL==0.9.3
