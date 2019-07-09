@@ -2,7 +2,7 @@ import openpyxl
 from itertools import permutations
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks/"
-NO_OF_LAYERS = 4
+NO_OF_LAYERS = 6
 TOP = [10, 20, 50, 100, 500, 1000]
 
 
@@ -38,8 +38,11 @@ def calculate_match(a, b, top):
     match_counter = 0
 
     for i in range(top):
-        if a[i][1] == b[i][1]:
-            match_counter += 1
+        try:
+            if a[i][1] == b[i][1]:
+                match_counter += 1
+        except IndexError:
+            break
 
     return match_counter / top * 100
 
@@ -48,13 +51,16 @@ def calculate_shift(a, b, top, a_dic, b_dic):
     sft = 0
 
     for i in range(top):
-        if a[i][1] != b[i][1]:
-            x = a_dic[a[i][1]]
-            try:
-                y = b_dic[a[i][1]]
-            except KeyError:
-                y = len(b_dic.keys())
-            sft += abs(x - y)
+        try:
+            if a[i][1] != b[i][1]:
+                x = a_dic[a[i][1]]
+                try:
+                    y = b_dic[a[i][1]]
+                except KeyError:
+                    y = len(b_dic.keys())
+                sft += abs(x - y)
+        except IndexError:
+            break
 
     return sft / top
 
@@ -75,7 +81,7 @@ layer_list = []
 for _ in range(NO_OF_LAYERS):
     layer_list.append(fill_ranks_lst(fetch_wb(_ + 1)))
 
-pairs = list(permutations([1, 2, 3, 4], 2))
+pairs = list(permutations([_ for _ in range(1, NO_OF_LAYERS + 1)], 2))
 for _ in pairs:
     if _[0] == _[1]:
         pairs.remove(_)
