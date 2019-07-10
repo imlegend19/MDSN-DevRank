@@ -28,7 +28,7 @@ with db:
     product_bug = {}
 
     print("Setting up product-bug...")
-    cur.execute("SELECT distinctrow product_id, bug_id FROM test_bug")
+    cur.execute("SELECT distinctrow product_id, bug_id FROM test_bug_fixed_closed")
 
     for i in cur.fetchall():
         if i[0] in product_bug.keys():
@@ -47,7 +47,7 @@ with db:
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
     bug_who = {}
 
     for i in cur.fetchall():
@@ -122,7 +122,7 @@ with db:
 
     print("Writing layer 2 edges to text file...")
 
-    with open('layer2_edges.txt', 'wb') as file:
+    with open('layer2_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
@@ -167,6 +167,6 @@ with db:
         rank += 1
 
     print("Saving...")
-    wb.save("layer2_ranks.xlsx")
+    wb.save("layer2_ranks_fc.xlsx")
 
     print("Process Complete!")

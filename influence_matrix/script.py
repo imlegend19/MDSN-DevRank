@@ -17,7 +17,7 @@ def fill_ranks_lst(sheet):
 
 
 def fetch_wb(layer):
-    wb = openpyxl.load_workbook(RELATIVE_PATH + "layer" + str(layer) + "_ranks.xlsx")
+    wb = openpyxl.load_workbook(RELATIVE_PATH + "layer" + str(layer) + "_ranks_fc.xlsx")
 
     return wb.active
 
@@ -67,5 +67,5 @@ for i in pairs:
 
     influence_matrix[a - 1][b - 1] = w
 
-with open("influence_matrix.txt", 'wb') as fp:
+with open("influence_matrix_fc.txt", 'wb') as fp:
     pickle.dump(influence_matrix, fp)

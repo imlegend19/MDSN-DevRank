@@ -26,11 +26,12 @@ with db:
         dev.append(i[0])
 
     print("Fetching and setting up dict...")
-    cur.execute("select distinctrow bug_id, component from test_bug "
-                "where bug_id in (select distinct bug_id from test_bug_id_updated)")
+    cur.execute("select distinctrow bug_id, component from test_bug_fixed_closed where bug_id in "
+                "(select distinct bug_id from test_bug_id_updated)")
     comp_bug = {}
 
     for i in cur.fetchall():
+        print(i)
         if i[1].strip() not in comp_bug.keys():
             comp_bug[i[1].strip()] = [i[0]]
         else:
@@ -38,11 +39,13 @@ with db:
             val.append(i[0])
             comp_bug[i[1].strip()] = val
 
+    print("Length comp_bug", len(comp_bug))
+
     print("Setup succeeded!")
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
     bug_who = {}
 
     for i in cur.fetchall():
@@ -117,7 +120,7 @@ with db:
 
     print("Writing layer 3 edges to text file...")
 
-    with open('layer3_edges.txt', 'wb') as file:
+    with open('layer3_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
@@ -144,7 +147,7 @@ with db:
         ec.reverse()
 
         print("Fetching developers...")
-        cur.execute("SELECT DISTINCT who_id, who FROM test_comment")
+        cur.execute("SELECT DISTINCT who_id, who FROM test_comment_fixed_closed")
 
         developer = {}
         for i in cur.fetchall():
@@ -165,7 +168,7 @@ with db:
             rank += 1
 
         print("Saving...")
-        wb.save("layer3_ranks.xlsx")
+        wb.save("layer3_ranks_fc.xlsx")
 
         print("Process Complete!")
 

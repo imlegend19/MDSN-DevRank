@@ -25,7 +25,7 @@ def fill_ranks_dic(sheet):
 
 
 def fetch_wb(layer):
-    wb = openpyxl.load_workbook(RELATIVE_PATH + "layer" + str(layer) + "_ranks.xlsx")
+    wb = openpyxl.load_workbook(RELATIVE_PATH + "layer" + str(layer) + "_ranks_fc.xlsx")
 
     return wb.active
 
@@ -105,7 +105,7 @@ for i in pairs:
 
         sh.append([str(top), str(match_percent), str(shift)])
 
-    file_name = str(a) + "-" + str(b) + "-analysis.xlsx"
+    file_name = str(a) + "-" + str(b) + "-analysis-fc.xlsx"
     wb.save(file_name)
 
 print("Process Complete!")

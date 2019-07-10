@@ -25,7 +25,7 @@ with db:
     for i in cur.fetchall():
         dev.append(i[0])
 
-    cur.execute("select distinctrow bug_id, priority from test_bug")
+    cur.execute("select distinctrow bug_id, priority from test_bug_fixed_closed")
 
     priority_bug = {}
 
@@ -45,7 +45,7 @@ with db:
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
     bug_who = {}
 
     for i in cur.fetchall():
@@ -120,7 +120,7 @@ with db:
 
     print("Writing layer 6 edges to text file...")
 
-    with open('layer6_edges.txt', 'wb') as file:
+    with open('layer6_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
@@ -147,7 +147,7 @@ with db:
         ec.reverse()
 
         print("Fetching developers...")
-        cur.execute("SELECT DISTINCT who_id, who FROM test_comment")
+        cur.execute("SELECT DISTINCT who_id, who FROM test_comment_fixed_closed")
 
         developer = {}
         for i in cur.fetchall():
@@ -168,7 +168,7 @@ with db:
             rank += 1
 
         print("Saving...")
-        wb.save("layer6_ranks.xlsx")
+        wb.save("layer6_ranks_fc.xlsx")
 
         print("Process Complete!")
 

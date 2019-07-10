@@ -2,16 +2,22 @@ import pickle
 from local_settings import db
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/"
-TOTAL = 0
+TOTAL = 1
 relative_ids = {}
 
 with db:
     cur = db.cursor()
     print("Fetching relative id's...")
-    cur.execute("SELECT id, who_id FROM who_ids_commenting_on_more_than_10_bugs")
+    cur.execute("SELECT distinct who_id FROM test_comment_fixed_closed")
 
+    who_ids = []
     for i in cur.fetchall():
-        relative_ids[i[1]] = i[0]
+        who_ids.append(i[0])
+
+    who_ids.sort()
+
+    for i in who_ids:
+        relative_ids[i] = TOTAL
         TOTAL += 1
 
 
@@ -30,7 +36,7 @@ def transpose(a):
 print("Matrix dimensions:", TOTAL, "x", TOTAL)
 
 for i in range(1, 7):
-    path = RELATIVE_PATH + "layer" + str(i) + "_edges.txt"
+    path = RELATIVE_PATH + "layer" + str(i) + "_edges_fc.txt"
 
     print("Fetching edges...")
     with open(path, "rb") as fp:
@@ -50,7 +56,7 @@ for i in range(1, 7):
     matrix_new = transpose(matrix)
 
     print("Dumping matrix...")
-    with open('A' + str(i) + '.txt', 'wb') as file:
+    with open('A' + str(i) + '_fc.txt', 'wb') as file:
         pickle.dump(matrix_new, file)
 
 print("Process Complete!")

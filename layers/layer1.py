@@ -29,7 +29,7 @@ with db:
 
     print("Setting up dict for who_id's who have commented on same bug...")
 
-    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment")
+    cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
 
     # FMT = '%H:%M:%S'
     # start = datetime.now().time()
@@ -45,7 +45,7 @@ with db:
                 bug_who[i[0]] = {i[1]}
 
     print("Fetching bugs from test_bug...")
-    cur.execute("SELECT distinct bug_id FROM test_bug")
+    cur.execute("SELECT distinct bug_id FROM test_bug_fixed_closed")
 
     bugs = []
     for i in cur.fetchall():
@@ -66,7 +66,7 @@ with db:
             for j in edg:
                 edges.add(j)
 
-    with open('layer1_edges.txt', 'wb') as file:
+    with open('layer1_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 
     for i in edges:
@@ -87,7 +87,7 @@ with db:
     ec.reverse()
 
     print("Fetching developers...")
-    cur.execute("SELECT DISTINCT who_id, who FROM test_comment")
+    cur.execute("SELECT DISTINCT who_id, who FROM test_comment_fixed_closed")
 
     developer = {}
     for i in cur.fetchall():
@@ -108,6 +108,6 @@ with db:
         rank += 1
 
     print("Saving...")
-    wb.save("layer1_ranks.xlsx")
+    wb.save("layer1_ranks_fc.xlsx")
 
     print("Process Competed!")

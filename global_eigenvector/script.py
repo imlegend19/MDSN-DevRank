@@ -38,13 +38,13 @@ def scalar_multiplication(matrix, scalar):
 
 
 print("Fetching files...")
-A1 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A1.txt"))
-A2 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A2.txt"))
-A3 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A3.txt"))
-A4 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A4.txt"))
-A5 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A5.txt"))
-A6 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A6.txt"))
-influence_matrix = np.array(fetch_file(RELATIVE_PATH + INFLUENCE_MATRIX + "influence_matrix.txt"))
+A1 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A1_fc.txt"))
+A2 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A2_fc.txt"))
+A3 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A3_fc.txt"))
+A4 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A4_fc.txt"))
+A5 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A5_fc.txt"))
+A6 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A6_fc.txt"))
+influence_matrix = np.array(fetch_file(RELATIVE_PATH + INFLUENCE_MATRIX + "influence_matrix_fc.txt"))
 
 krp = []
 for i in range(6):
@@ -81,14 +81,14 @@ print("Total eigenvalues:", len(e_val))
 
 print("Saving compressed eigenvector...")
 for i in range(len(e_vec)):
-    compressed_file = bz2.BZ2File("global_ev_" + str(i) + ".txt", 'wb')
+    compressed_file = bz2.BZ2File("global_ev_" + str(i) + "_fc.txt", 'wb')
     pickle.dump(e_vec[i], compressed_file)
 
 print("Saving eigenvalues...")
 count = 1
 for i in e_val:
     print("Ongoing", count)
-    with open("eigenvalue_" + str(count) + ".txt", "wb") as fp:
+    with open("eigenvalue_" + str(count) + "_fc.txt", "wb") as fp:
         pickle.dump(i, fp, protocol=2)
 
     count += 1
