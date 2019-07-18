@@ -206,3 +206,6 @@ def layer4(product_id):
 
             print(e.args)
             print("Process Unsuccessful!")
+
+
+layer4(None)

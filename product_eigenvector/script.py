@@ -3,8 +3,8 @@ import openpyxl
 from layers.layer1 import layer1
 from layers.layer3 import layer3
 from layers.layer4 import layer4
-from layers.layer5 import layer5
-from layers.layer6 import layer6
+from layers.extra_layers.layer5 import layer5
+from layers.extra_layers.layer6 import layer6
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/"
 TIME_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/bug_time/product_avg_time.txt"

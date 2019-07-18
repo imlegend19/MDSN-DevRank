@@ -137,3 +137,6 @@ def layer1(product_id):
 
         if product_id is None:
             print("Process Competed!")
+
+
+layer1(None)

@@ -9,7 +9,6 @@ from local_settings import db
 Layer 2 Network: 
 
 Edge between developers who commented on 2 different bugs which belong to same product.
-                                                                                       and component
 
 Dataset Used : gnomebug
 Table : bug
@@ -130,7 +129,7 @@ with db:
 
     for i in edges:
         if i[0] in dev and i[1] in dev:
-            print('YES')
+            pass
         else:
             print("NOOOOOOOO")
 
