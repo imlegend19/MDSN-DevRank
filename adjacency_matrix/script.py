@@ -21,7 +21,7 @@ with db:
         TOTAL += 1
 
 print("Saving relative id's...")
-with open("relative_id.txt", 'wb') as fp:
+with open("relative_id_d1.txt", 'wb') as fp:
     pickle.dump(relative_ids, fp)
 
 
@@ -60,7 +60,7 @@ for i in range(1, 5):
     matrix_new = transpose(matrix)
 
     print("Dumping matrix...")
-    with open('A' + str(i) + '_fc.txt', 'wb') as file:
+    with open('A' + str(i) + '_d1_fc.txt', 'wb') as file:
         pickle.dump(matrix_new, file)
 
 print("Process Complete!")
