@@ -9,6 +9,7 @@ from local_settings import db
 Layer 3 Network: 
 
 Edge between developers who commented on 2 different bugs which belong to same component.
+                                                          reported by same reporter
 
 Dataset Used : gnomebug
 Table : bug

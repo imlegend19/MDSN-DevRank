@@ -79,10 +79,13 @@ e_vec = e[1]
 
 print("Total eigenvalues:", len(e_val))
 
-print("Saving compressed eigenvector...")
-for i in range(len(e_vec)):
-    compressed_file = bz2.BZ2File("global_ev_" + str(i) + "_fc.txt", 'wb')
-    pickle.dump(e_vec[i], compressed_file)
+# print("Saving compressed eigenvector...")
+# for i in range(len(e_vec)):
+#     with open("global_ev_" + str(i) + "_fc.txt", 'wb') as fp:
+#         pickle.dump(e_vec[i], fp)
+
+print(len(e_vec))
+print(len(e_vec[0]))
 
 print("Saving eigenvalues...")
 count = 1
