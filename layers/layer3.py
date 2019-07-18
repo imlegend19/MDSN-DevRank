@@ -8,7 +8,7 @@ from local_settings import db
 """
 Layer 3 Network: 
 
-Edge between developers who commented on 2 different bugs reported by same reporter
+Edge between developers who commented on 2 different bugs reported by same reporter.
 
 Dataset Used : gnomebug
 Table : bug

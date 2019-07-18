@@ -1,8 +1,8 @@
 import pickle
 from local_settings import db
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/"
-TOTAL = 1
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_1/"
+TOTAL = 0
 relative_ids = {}
 
 with db:
@@ -20,6 +20,10 @@ with db:
         relative_ids[i] = TOTAL
         TOTAL += 1
 
+print("Saving relative id's...")
+with open("relative_id.txt", 'wb') as fp:
+    pickle.dump(relative_ids, fp)
+
 
 def transpose(a):
     b = []
@@ -35,7 +39,7 @@ def transpose(a):
 
 print("Matrix dimensions:", TOTAL, "x", TOTAL)
 
-for i in range(1, 7):
+for i in range(1, 5):
     path = RELATIVE_PATH + "layer" + str(i) + "_edges_fc.txt"
 
     print("Fetching edges...")
