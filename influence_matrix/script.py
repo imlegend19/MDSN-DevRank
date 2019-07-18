@@ -3,7 +3,7 @@ from itertools import permutations
 
 import openpyxl
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks/definition_1/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks/definition_2/"
 NO_OF_LAYERS = 4
 
 
@@ -65,5 +65,5 @@ for i in pairs:
 
     influence_matrix[a - 1][b - 1] = w
 
-with open("influence_matrix_fc.txt", 'wb') as fp:
+with open("influence_matrix_d2_fc.txt", 'wb') as fp:
     pickle.dump(influence_matrix, fp)
