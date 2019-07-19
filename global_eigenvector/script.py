@@ -2,8 +2,8 @@ import pickle
 import numpy as np
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/"
-INFLUENCE_MATRIX = "influence_matrix/definition_1/"
-ADJACENCY_MATRIX = "adjacency_matrix/definition_1/"
+INFLUENCE_MATRIX = "influence_matrix/definition_2/"
+ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
 
 
 def fetch_file(path):
@@ -67,12 +67,10 @@ e = np.linalg.eig(kr_product)
 e_val = e[0]
 e_vec = e[1]
 
-for i in e_val:
-    print(i)
+ind = list(e_val).index(max(e_val))
+print(ind)
 
-print(e_val[486])
-
-pev = e_vec[468] / np.linalg.norm(e_vec[468])
+pev = e_vec[ind] / np.linalg.norm(e_vec[ind])
 
 print(pev.shape)
 
@@ -84,7 +82,7 @@ with open("global_eigenvector_fc.txt", 'wb') as fp:
     pickle.dump(pev, fp)
 
 print("Saving eigenvalues...")
-with open("eigenvalue_486_fc.txt", "wb") as fp:
-    pickle.dump(e_val[486], fp)
+with open("eigenvalue_" + str(ind) + "_fc.txt", "wb") as fp:
+    pickle.dump(e_val[ind], fp)
 
 print("Process finished!")

@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <title>Changes made to bug 94058</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <link rel="Top" href="https://bugzilla.gnome.org/">
+
+
+    <link rel="Show" title="Dependency Tree"
+          href="showdependencytree.cgi?id=94058&amp;hide_resolved=1">
+
+    <link rel="Show" title="Bug Activity"
+          href="show_activity.cgi?id=94058">
+    <link rel="Show" title="Printer-Friendly Version"
+          href="show_bug.cgi?format=multiple&amp;id=94058">
+
+
+    <link href="skins/standard/global.css?1561029034"
+          rel="alternate stylesheet"
+          title="Classic">
+    <link href="skins/standard/global.css?1561029034" rel="stylesheet"
+          type="text/css">
+    <!--[if lte IE 7]>
+
+
+    <link href="skins/standard/IE-fixes.css?1561029034" rel="stylesheet"
+          type="text/css">
+    <![endif]-->
+
+    <link href="skins/contrib/Gnome/global.css?1561029032" rel="stylesheet"
+          type="text/css" title="Gnome">
+
+
+    <script type="text/javascript" src="js/yui/yahoo-dom-event/yahoo-dom-event.js?1561029033"></script>
+    <script type="text/javascript" src="js/yui/cookie/cookie-min.js?1561029033"></script>
+    <script type="text/javascript" src="js/global.js?1561029033"></script>
+
+    <script type="text/javascript">
+        <!--
+        YAHOO.namespace('bugzilla');
+        YAHOO.util.Event.addListener = function (el, sType, fn, obj, overrideContext) {
+            if (("onpagehide" in window || YAHOO.env.ua.gecko) && sType === "unload") {
+                sType = "pagehide";
+            }
+            ;
+            var capture = ((sType == "focusin" || sType == "focusout") && !YAHOO.env.ua.ie) ? true : false;
+            return this._addListener(el, this._getType(sType), fn, obj, overrideContext, capture);
+        };
+        if ("onpagehide" in window || YAHOO.env.ua.gecko) {
+            YAHOO.util.Event._simpleRemove(window, "unload",
+                YAHOO.util.Event._unload);
+        }
+
+        function unhide_language_selector() {
+            YAHOO.util.Dom.removeClass(
+                'lang_links_container', 'bz_default_hidden'
+            );
+        }
+
+        YAHOO.util.Event.onDOMReady(unhide_language_selector);
+
+
+        var BUGZILLA = {
+            param: {
+                cookiepath: '\/',
+                maxusermatches: 50
+            },
+            constant: {
+                COMMENT_COLS: 80
+            },
+            string: {
+
+
+                attach_desc_required:
+                    'You must enter a Description for this attachment.',
+                component_required:
+                    'You must select a Component for this bug.',
+                description_required:
+                    'You must enter a Description for this bug.',
+                short_desc_required:
+                    'You must enter a Summary for this bug.',
+                version_required:
+                    'You must select a Version for this bug.'
+            }
+        };
+
+        // -->
+    </script>
+
+
+    <link rel="search" type="application/opensearchdescription+xml"
+          title="GNOME Bugzilla" href="./search_plugin.cgi">
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css"
+          href="extensions/TraceParser/web/style.css">
+</head>
+
+
+<body onload=""
+      class="bugzilla-gnome-org yui-skin-sam">
+
+
+<div id="header">
+    <div id="banner">
+    </div>
+
+    <table border="0" cellspacing="0" cellpadding="0" id="titles">
+        <tr>
+            <td id="title">
+                <p>GNOME Bugzilla &ndash; Activity log for bug 94058: States not being mapped</p>
+            </td>
+
+
+        </tr>
+    </table>
+
+    <table id="lang_links_container" cellpadding="0" cellspacing="0"
+           class="bz_default_hidden">
+        <tr>
+            <td>
+            </td>
+        </tr>
+    </table>
+    <ul class="links">
+        <li><a href="./">Home</a></li>
+        <li><span class="separator">| </span><span style="text-decoration:line-through"><a href="">New</a></span></li>
+        <li><span class="separator">| </span><a href="page.cgi?id=browse.html&amp;product=at-spi">Browse</a></li>
+        <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+        <li class="form">
+            <span class="separator">| </span>
+            <form action="buglist.cgi" method="get"
+                  onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+                <input type="hidden" id="no_redirect_top" name="no_redirect" value="0">
+                <script type="text/javascript">
+                    if (history && history.replaceState) {
+                        var no_redirect = document.getElementById("no_redirect_top");
+                        no_redirect.value = 1;
+                    }
+                </script>
+                <input class="txt" type="text" id="quicksearch_top" name="quicksearch"
+                       title="Quick Search" value="">
+                <input class="btn" type="submit" value="Search"
+                       id="find_top"></form>
+            <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+        <li><span class="separator">| </span><a href="page.cgi?id=reports.html">Reports</a></li>
+
+
+        <li id="new_account_container_top">
+            <span class="separator">| </span>
+            <a href="createaccount.cgi">New&nbsp;Account</a>
+        </li>
+
+        <li id="mini_login_container_top">
+            <span class="separator">| </span>
+            <a id="login_link_top" href="show_activity.cgi?id=94058&amp;GoAheadAndLogIn=1"
+               onclick="return show_mini_login_form('_top')">Log In</a>
+
+
+            <form action="show_activity.cgi?id=94058" method="POST"
+                  class="mini_login bz_default_hidden"
+                  id="mini_login_top"
+                  onsubmit="return check_mini_login_fields( '_top' );"
+            >
+                <input id="Bugzilla_login_top"
+                       class="bz_login"
+                       name="Bugzilla_login"
+                       title="Login"
+                       onfocus="mini_login_on_focus('_top')"
+                >
+                <input class="bz_password"
+                       id="Bugzilla_password_top"
+                       name="Bugzilla_password"
+                       type="password"
+                       title="Password"
+                >
+                <input class="bz_password bz_default_hidden bz_mini_login_help" type="text"
+                       id="Bugzilla_password_dummy_top" value="password"
+                       title="Password"
+                       onfocus="mini_login_on_focus('_top')"
+                >
+                <input type="checkbox" id="Bugzilla_remember_top"
+                       name="Bugzilla_remember" value="on" class="bz_remember"
+                       checked>
+                <label for="Bugzilla_remember_top">Remember</label>
+                <input type="hidden" name="Bugzilla_login_token"
+                       value="">
+                <input type="submit" name="GoAheadAndLogIn" value="Log in"
+                       id="log_in_top">
+                <script type="text/javascript">
+                    mini_login_constants = {
+                        "login": "login",
+                        "warning": "You must set the login and password before logging in."
+                    };
+
+                    if (YAHOO.env.ua.gecko || YAHOO.env.ua.ie || YAHOO.env.ua.opera) {
+                        YAHOO.util.Event.onDOMReady(function () {
+                            init_mini_login_form('_top');
+                        });
+                    } else {
+                        YAHOO.util.Event.on(window, 'load', function () {
+                            window.setTimeout(function () {
+                                init_mini_login_form('_top');
+                            }, 200);
+                        });
+                    }
+                </script>
+                <a href="#" onclick="return hide_mini_login_form('_top')">[x]</a>
+            </form>
+        </li>
+        <li id="forgot_container_top">
+            <span class="separator">| </span>
+            <a id="forgot_link_top" href="show_activity.cgi?id=94058&amp;GoAheadAndLogIn=1#forgot"
+               onclick="return show_forgot_form('_top')">Forgot Password</a>
+            <form action="token.cgi" method="post" id="forgot_form_top"
+                  class="mini_forgot bz_default_hidden">
+                <label for="login_top">Login:</label>
+                <input type="text" name="loginname" size="20" id="login_top">
+                <input id="forgot_button_top" value="Reset Password"
+                       type="submit">
+                <input type="hidden" name="a" value="reqpw">
+                <input type="hidden" id="token_top" name="token"
+                       value="1563539044-vCX66EzMh0Ty70cmMlpEEsrk3r5v-pz0HcnDKpAeixo">
+                <a href="#" onclick="return hide_forgot_form('_top')">[x]</a>
+            </form>
+        </li>
+    </ul>
+</div>
+
+<div id="bugzilla-body">
+    <div style="margin-bottom: 10px; margin-top: 5px; padding: 20px; text-align: center; background-color: rgb(74,134,207); border-left: 20px solid red; border-bottom: rgb(57,104,161); border-top: rgb(57,104,161); border-right: rgb(57,104,161); color: rgb(255,255,255);">
+        After an <a href="https://wiki.gnome.org/Initiatives/DevelopmentInfrastructure"
+                    style="color: rgb(255,255,255);">evaluation</a>, the <a
+            href="https://mail.gnome.org/archives/desktop-devel-list/2018-May/msg00026.html"
+            style="color: rgb(255,255,255);">migration</a> from Bugzilla to <a href="https://gitlab.gnome.org/"
+                                                                               style="color: rgb(255,255,255);">GitLab</a>
+        is <a href="https://mail.gnome.org/archives/desktop-devel-list/2018-May/msg00032.html"
+              style="color: rgb(255,255,255);">ongoing</a>. <a href="https://wiki.gnome.org/GitLab"
+                                                               style="color: rgb(255,255,255);">Learn more about
+        GitLab</a>. <br><span style="background-color: red;">No <b>new</b> issues can be reported in GNOME Bugzilla anymore.</span>
+        Some older issues are still tracked here (until migrated to Gitlab).
+        <br>To report an issue in a GNOME project, <a href="https://gitlab.gnome.org/GNOME"
+                                                      style="color: rgb(255,255,255);">go to GNOME GitLab</a>. <br>Do
+        <b>not</b> go to GNOME Gitlab for: <a href="https://sourceforge.net/p/bluefish/tickets"
+                                              style="color: rgb(255,255,255);">Bluefish</a>, <a
+            href="https://github.com/doxygen/doxygen/issues" style="color: rgb(255,255,255);">Doxygen</a>, <a
+            href="https://bugs.gnucash.org/" style="color: rgb(255,255,255);">GnuCash</a>, <a
+            href="https://gitlab.freedesktop.org/gstreamer/" style="color: rgb(255,255,255);">GStreamer</a>, <a
+            href="https://github.com/afcowie/java-gnome/issues" style="color: rgb(255,255,255);">java-gnome</a>, <a
+            href="https://github.com/ldtp/ldtp2/issues" style="color: rgb(255,255,255);">LDTP</a>, <a
+            href="https://gitlab.freedesktop.org/NetworkManager/NetworkManager/issues" style="color: rgb(255,255,255);">NetworkManager</a>,
+        <a href="https://github.com/tomboy-notes/tomboy/issues" style="color: rgb(255,255,255);">Tomboy</a>.
+    </div>
+
+    <p><a class="bz_bug_link
+          bz_status_VERIFIED  bz_closed"
+          title="VERIFIED FIXED - States not being mapped"
+          href="show_bug.cgi?id=94058">Back to bug 94058</a>
+    </p>
+    <table border cellpadding="4">
+        <tr>
+            <th>Who</th>
+            <th>When</th>
+            <th>What</th>
+            <th>Removed</th>
+            <th>Added</th>
+        </tr>
+
+        <tr>
+            <td rowspan="1" valign="top">darren.p.kenny
+            </td>
+            <td rowspan="1" valign="top">2002-09-24 09:00:26 UTC
+            </td>
+            <td>
+                Status
+            </td>
+            <td>NEW
+            </td>
+            <td>ASSIGNED
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="2" valign="top">darren.p.kenny
+            </td>
+            <td rowspan="2" valign="top">2002-09-24 10:16:19 UTC
+            </td>
+            <td>
+                Status
+            </td>
+            <td>ASSIGNED
+            </td>
+            <td>RESOLVED
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Resolution
+            </td>
+            <td>---
+            </td>
+            <td>FIXED
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="1" valign="top">bill.haneman
+            </td>
+            <td rowspan="1" valign="top">2002-10-15 15:10:35 UTC
+            </td>
+            <td>
+                Status
+            </td>
+            <td>RESOLVED
+            </td>
+            <td>CLOSED
+            </td>
+        </tr>
+        <tr>
+            <td rowspan="1" valign="top">mkanat
+            </td>
+            <td rowspan="1" valign="top">2009-08-15 18:40:50 UTC
+            </td>
+            <td>
+                Status
+            </td>
+            <td>CLOSED
+            </td>
+            <td>VERIFIED
+            </td>
+        </tr>
+    </table>
+
+    <p><a class="bz_bug_link
+          bz_status_VERIFIED  bz_closed"
+          title="VERIFIED FIXED - States not being mapped"
+          href="show_bug.cgi?id=94058">Back to bug 94058</a>
+    </p>
+</div>
+
+
+<div id="footer">
+    <div class="intro"></div>
+
+
+    <ul id="useful-links">
+        <li id="links-actions">
+            <ul class="links">
+                <li><a href="./">Home</a></li>
+                <li><span class="separator">| </span><span style="text-decoration:line-through"><a
+                        href="">New</a></span></li>
+                <li><span class="separator">| </span><a href="page.cgi?id=browse.html&amp;product=at-spi">Browse</a>
+                </li>
+                <li><span class="separator">| </span><a href="query.cgi">Search</a></li>
+
+                <li class="form">
+                    <span class="separator">| </span>
+                    <form action="buglist.cgi" method="get"
+                          onsubmit="if (this.quicksearch.value == '')
+                  { alert('Please enter one or more search terms first.');
+                    return false; } return true;">
+                        <input type="hidden" id="no_redirect_bottom" name="no_redirect" value="0">
+                        <script type="text/javascript">
+                            if (history && history.replaceState) {
+                                var no_redirect = document.getElementById("no_redirect_bottom");
+                                no_redirect.value = 1;
+                            }
+                        </script>
+                        <input class="txt" type="text" id="quicksearch_bottom" name="quicksearch"
+                               title="Quick Search" value="">
+                        <input class="btn" type="submit" value="Search"
+                               id="find_bottom"></form>
+                    <a href="page.cgi?id=quicksearch.html" title="Quicksearch Help">[?]</a></li>
+
+                <li><span class="separator">| </span><a href="page.cgi?id=reports.html">Reports</a></li>
+
+
+                <li id="new_account_container_bottom">
+                    <span class="separator">| </span>
+                    <a href="createaccount.cgi">New&nbsp;Account</a>
+                </li>
+
+                <li id="mini_login_container_bottom">
+                    <span class="separator">| </span>
+                    <a id="login_link_bottom" href="show_activity.cgi?id=94058&amp;GoAheadAndLogIn=1"
+                       onclick="return show_mini_login_form('_bottom')">Log In</a>
+
+
+                    <form action="show_activity.cgi?id=94058" method="POST"
+                          class="mini_login bz_default_hidden"
+                          id="mini_login_bottom"
+                          onsubmit="return check_mini_login_fields( '_bottom' );"
+                    >
+                        <input id="Bugzilla_login_bottom"
+                               class="bz_login"
+                               name="Bugzilla_login"
+                               title="Login"
+                               onfocus="mini_login_on_focus('_bottom')"
+                        >
+                        <input class="bz_password"
+                               id="Bugzilla_password_bottom"
+                               name="Bugzilla_password"
+                               type="password"
+                               title="Password"
+                        >
+                        <input class="bz_password bz_default_hidden bz_mini_login_help" type="text"
+                               id="Bugzilla_password_dummy_bottom" value="password"
+                               title="Password"
+                               onfocus="mini_login_on_focus('_bottom')"
+                        >
+                        <input type="checkbox" id="Bugzilla_remember_bottom"
+                               name="Bugzilla_remember" value="on" class="bz_remember"
+                               checked>
+                        <label for="Bugzilla_remember_bottom">Remember</label>
+                        <input type="hidden" name="Bugzilla_login_token"
+                               value="">
+                        <input type="submit" name="GoAheadAndLogIn" value="Log in"
+                               id="log_in_bottom">
+                        <script type="text/javascript">
+                            mini_login_constants = {
+                                "login": "login",
+                                "warning": "You must set the login and password before logging in."
+                            };
+
+                            if (YAHOO.env.ua.gecko || YAHOO.env.ua.ie || YAHOO.env.ua.opera) {
+                                YAHOO.util.Event.onDOMReady(function () {
+                                    init_mini_login_form('_bottom');
+                                });
+                            } else {
+                                YAHOO.util.Event.on(window, 'load', function () {
+                                    window.setTimeout(function () {
+                                        init_mini_login_form('_bottom');
+                                    }, 200);
+                                });
+                            }
+                        </script>
+                        <a href="#" onclick="return hide_mini_login_form('_bottom')">[x]</a>
+                    </form>
+                </li>
+                <li id="forgot_container_bottom">
+                    <span class="separator">| </span>
+                    <a id="forgot_link_bottom" href="show_activity.cgi?id=94058&amp;GoAheadAndLogIn=1#forgot"
+                       onclick="return show_forgot_form('_bottom')">Forgot Password</a>
+                    <form action="token.cgi" method="post" id="forgot_form_bottom"
+                          class="mini_forgot bz_default_hidden">
+                        <label for="login_bottom">Login:</label>
+                        <input type="text" name="loginname" size="20" id="login_bottom">
+                        <input id="forgot_button_bottom" value="Reset Password"
+                               type="submit">
+                        <input type="hidden" name="a" value="reqpw">
+                        <input type="hidden" id="token_bottom" name="token"
+                               value="1563539044-vCX66EzMh0Ty70cmMlpEEsrk3r5v-pz0HcnDKpAeixo">
+                        <a href="#" onclick="return hide_forgot_form('_bottom')">[x]</a>
+                    </form>
+                </li>
+            </ul>
+        </li>
+
+
+    </ul>
+
+    <div class="outro"></div>
+</div>
+
+
+</body>
+</html>
