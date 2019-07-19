@@ -101,9 +101,9 @@ def layer1(product_id):
                 for j in edg:
                     edges.add(j)
 
-        if product_id is None:
-            save_edges(edges)
-            print("Saved edges! Total edges:", len(edges))
+        # if product_id is None:
+        #     save_edges(edges)
+        #     print("Saved edges! Total edges:", len(edges))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))
@@ -123,7 +123,7 @@ def layer1(product_id):
             for i in cur.fetchall():
                 developer[i[0]] = i[1]
 
-            save_ranks(developer, ec)
+            # save_ranks(developer, ec)
         else:
             sum_ec = 0
 

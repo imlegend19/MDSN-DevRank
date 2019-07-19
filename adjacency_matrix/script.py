@@ -1,4 +1,7 @@
 import pickle
+
+import numpy as np
+
 from local_settings import db
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_2/"
@@ -59,8 +62,19 @@ for i in range(1, 5):
     print("Calculating transpose...")
     matrix_new = transpose(matrix)
 
-    print("Dumping matrix...")
-    with open('A' + str(i) + '_d2_fc.txt', 'wb') as file:
-        pickle.dump(matrix_new, file)
+    # print("Dumping matrix...")
+    # with open('A' + str(i) + '_fc.txt', 'wb') as file:
+    #     pickle.dump(matrix_new, file)
+
+    e_val, e_vec = np.linalg.eig(np.array(matrix_new))
+
+    max_e_val = max(e_val)
+    print(max_e_val)
+    ind = list(e_val).index(max_e_val)
+
+    pev = e_vec[ind] / np.linalg.norm(e_vec[ind])
+
+    print(sum(pev))
+
 
 print("Process Complete!")

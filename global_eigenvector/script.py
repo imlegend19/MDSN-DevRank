@@ -1,11 +1,9 @@
 import pickle
-import bz2
-
 import numpy as np
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/"
-INFLUENCE_MATRIX = "influence_matrix/"
-ADJACENCY_MATRIX = "adjacency_matrix/"
+INFLUENCE_MATRIX = "influence_matrix/definition_1/"
+ADJACENCY_MATRIX = "adjacency_matrix/definition_1/"
 
 
 def fetch_file(path):
@@ -22,19 +20,6 @@ def fetch_adj_mat(column):
         return A3
     elif column == 3:
         return A4
-    elif column == 4:
-        return A5
-    elif column == 5:
-        return A6
-
-
-def scalar_multiplication(matrix, scalar):
-    for i in range(len(matrix)):
-        for j in range(len(matrix)):
-            if matrix[i][j] == 1:
-                matrix[i][j] = scalar
-
-    return matrix
 
 
 print("Fetching files...")
@@ -42,34 +27,39 @@ A1 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A1_fc.txt"))
 A2 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A2_fc.txt"))
 A3 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A3_fc.txt"))
 A4 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A4_fc.txt"))
-A5 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A5_fc.txt"))
-A6 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A6_fc.txt"))
 influence_matrix = np.array(fetch_file(RELATIVE_PATH + INFLUENCE_MATRIX + "influence_matrix_fc.txt"))
 
 krp = []
-for i in range(6):
-    krp.append([0 for _ in range(6)])
 
-for i in range(6):
-    for j in range(6):
-        print("Ongoing w" + str(i) + str(j))
-        if i == j:
-            krp[i][j] = fetch_adj_mat(j)
-        else:
-            krp[i][j] = fetch_adj_mat(j) * influence_matrix[i][j]
+for i in range(4):
+    wa1 = A1 * influence_matrix[i][0]
+    wa2 = A2 * influence_matrix[i][1]
+    wa3 = A3 * influence_matrix[i][2]
+    wa4 = A4 * influence_matrix[i][3]
+
+    for j in range(1134):
+        row = []
+
+        row.extend(wa1[j])
+        row.extend(wa2[j])
+        row.extend(wa3[j])
+        row.extend(wa4[j])
+
+        krp.append(row)
 
 print("Clearing variables...")
 A1 = None
 A2 = None
 A3 = None
 A4 = None
-A5 = None
-A6 = None
 influence_matrix = None
 
 print("Setting up kr_product...")
 kr_product = np.array(krp, dtype=np.float)
 krp.clear()
+
+print(kr_product.shape)
+print(kr_product)
 
 print("Calculating eigenvector...")
 e = np.linalg.eig(kr_product)
@@ -77,23 +67,24 @@ e = np.linalg.eig(kr_product)
 e_val = e[0]
 e_vec = e[1]
 
-print("Total eigenvalues:", len(e_val))
+for i in e_val:
+    print(i)
 
-# print("Saving compressed eigenvector...")
-# for i in range(len(e_vec)):
-#     with open("global_ev_" + str(i) + "_fc.txt", 'wb') as fp:
-#         pickle.dump(e_vec[i], fp)
+print(e_val[486])
 
-print(len(e_vec))
-print(len(e_vec[0]))
+pev = e_vec[468] / np.linalg.norm(e_vec[468])
+
+print(pev.shape)
+
+print(pev)
+print(sum(map(lambda x: x.real * x.real, pev)))
+
+print("Saving eigenvector...")
+with open("global_eigenvector_fc.txt", 'wb') as fp:
+    pickle.dump(pev, fp)
 
 print("Saving eigenvalues...")
-count = 1
-for i in e_val:
-    print("Ongoing", count)
-    with open("eigenvalue_" + str(count) + "_fc.txt", "wb") as fp:
-        pickle.dump(i, fp, protocol=2)
-
-    count += 1
+with open("eigenvalue_486_fc.txt", "wb") as fp:
+    pickle.dump(e_val[486], fp)
 
 print("Process finished!")
