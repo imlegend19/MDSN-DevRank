@@ -58,23 +58,23 @@ def layer3(product_id):
         if product_id is None:
             print("Fetching and setting up dict...")
 
-            cur.execute("select distinctrow bug_id, reporter from test_bug_fixed_closed")
+            cur.execute("select distinctrow bug_id, component from test_bug_fixed_closed")
         else:
-            cur.execute("select distinctrow bug_id, reporter from test_bug_fixed_closed where product_id="
+            cur.execute("select distinctrow bug_id, component from test_bug_fixed_closed where product_id="
                         + str(product_id))
 
-        repo_bug = {}
+        comp_bug = {}
 
         for i in cur.fetchall():
-            if i[1].strip() not in repo_bug.keys():
-                repo_bug[i[1].strip()] = [i[0]]
+            if i[1].strip() not in comp_bug.keys():
+                comp_bug[i[1].strip()] = [i[0]]
             else:
-                val = repo_bug[i[1].strip()]
+                val = comp_bug[i[1].strip()]
                 val.append(i[0])
-                repo_bug[i[1].strip()] = val
+                comp_bug[i[1].strip()] = val
 
         if product_id is None:
-            print("Length repo_bug", len(repo_bug))
+            print("Length comp_bug", len(comp_bug))
             print("Setup succeeded!")
             print("Setting up dict for who_id's who have commented on same bug...")
 
@@ -93,12 +93,12 @@ def layer3(product_id):
 
         if product_id is None:
             print("Fetched!")
-            print("Setting up reporter-bug-who dict...")
+            print("Setting up component-bug-who dict...")
 
-        repo_bug_who = {}
+        comp_bug_who = {}
 
-        for i in repo_bug:
-            val = repo_bug[i]
+        for i in comp_bug:
+            val = comp_bug[i]
             dic_val = []
             for j in val:
                 try:
@@ -107,10 +107,10 @@ def layer3(product_id):
                         dic_val.append((j, k))
                 except KeyError:
                     pass
-            repo_bug_who[i] = dic_val
+            comp_bug_who[i] = dic_val
 
         bug_who.clear()
-        repo_bug.clear()
+        comp_bug.clear()
 
         cbw_length = {}
         length = []
@@ -118,9 +118,9 @@ def layer3(product_id):
         if product_id is None:
             print("Calculating lengths...")
 
-        for i in repo_bug_who:
-            length.append(len(repo_bug_who[i]))
-            cbw_length[len(repo_bug_who[i])] = i
+        for i in comp_bug_who:
+            length.append(len(comp_bug_who[i]))
+            cbw_length[len(comp_bug_who[i])] = i
 
         length.sort(reverse=True)
         # del cbw_length[length.pop(0)]
@@ -135,10 +135,10 @@ def layer3(product_id):
         counter = 1
         for _ in length:
             i = cbw_length[_]
-            val = repo_bug_who[i]
+            val = comp_bug_who[i]
 
             if product_id is None:
-                print("Ongoing =", counter, "- Reporter =", i, "- Total Length =", _, "- Total Edges =",
+                print("Ongoing =", counter, "- Component =", i, "- Total Length =", _, "- Total Edges =",
                       len(edges))
 
             for j in val:
@@ -204,6 +204,3 @@ def layer3(product_id):
             print("Process Unsuccessful!")
 
             print("Filled", len(graph.edges.data()), "edges out of", len(edges))
-
-
-layer3(None)

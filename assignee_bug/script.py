@@ -1,6 +1,7 @@
 from urllib import request
-
+import pickle
 from local_settings import db
+from bs4 import BeautifulSoup
 
 with db:
     print("Connected to db...")
@@ -41,10 +42,33 @@ with db:
 
     print(len(assignee_bug))
 
-    # url = "https://bugzilla.gnome.org/show_activity.cgi?id="
-    #
+    url = "https://bugzilla.gnome.org/show_activity.cgi?id="
+
     # cnt = 1
     # for i in assignee_bug.values():
-    #     print("Ongoing", cnt)
-    #     request.urlretrieve(url + str(i), "bug_html/" + str(i) + ".html")
-    #     cnt += 1
+    #    print("Ongoing", cnt)
+    #    request.urlretrieve(url + str(i), "bug_html/" + str(i) + ".html")
+    #    cnt += 1
+
+    for i in assignee_bug.values():
+        with open("bug_html/" + str(i) + ".html", 'r') as fp:
+            html = fp.read()
+
+        soup = BeautifulSoup(html, features="html.parser")
+
+        div = soup.find("div", attrs={"id": "bugzilla-body"})
+        table = div.find("table")
+
+        headings = [th.get_text() for th in table.find("tr").find_all("th")]
+
+        print(headings)
+
+        datasets = []
+        for row in table.find_all("tr")[1:]:
+            dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
+            datasets.append(dataset)
+
+        # print(datasets)
+
+        with open("bug_table/" + str(i) + ".txt", 'wb') as file:
+            pickle.dump(datasets, file)
