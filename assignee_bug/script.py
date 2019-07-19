@@ -13,8 +13,7 @@ with db:
         assignees.append(i[0].strip())
 
     print(assignees)
-    cur.execute("SELECT DISTINCTROW who_id, who FROM test_comment_fixed_closed") \
- \
+    cur.execute("SELECT DISTINCTROW who_id, who FROM test_comment_fixed_closed")
     who_id_who = {}
     for i in cur.fetchall():
         who_id_who[i[1].strip()] = i[0]
