@@ -68,7 +68,7 @@ with db:
             dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
             datasets.append(dataset)
 
-        # print(datasets)
+        print(datasets)
 
         with open("bug_table/" + str(i) + ".txt", 'wb') as file:
             pickle.dump(datasets, file)
