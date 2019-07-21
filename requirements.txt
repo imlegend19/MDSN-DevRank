@@ -1,3 +1,5 @@
+python-dateutil
+beautifulsoup4
 scipy
 decorator==4.4.0
 et-xmlfile==1.0.1

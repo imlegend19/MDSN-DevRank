@@ -105,4 +105,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-scipy/
+assignee_bug/bug_html/*
