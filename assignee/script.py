@@ -22,7 +22,7 @@ with db:
 
     no_comment_assignee = []
 
-    print("Filtering assignee_bug...")
+    print("Filtering assignee...")
     segregated_assignees = {}
     for i in assignees:
         if i in who_id_who.keys():

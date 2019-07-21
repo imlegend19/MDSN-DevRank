@@ -16,12 +16,12 @@ wb = openpyxl.Workbook()
 sheet = wb.active
 
 titles = ["Assignee Id", "Assignee", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
-          "L4 Centrality", "Global Centrality A", "Global Centrality B", "Avg Fixed Time"]
+          "L4 Centrality", "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent"]
 
 sheet.append(titles)
 sheet.append(["" for i in range(len(titles))])
 
-who_assignee = {v: k for k, v in fetch_file(RELATIVE_PATH + "assignee_bug/assignee_who.txt").items()}
+who_assignee = {v: k for k, v in fetch_file(RELATIVE_PATH + "assignee/assignee_who.txt").items()}
 
 who = []
 for i in who_assignee:
@@ -34,8 +34,8 @@ l3_centrality = fetch_file(RELATIVE_PATH + "layers/l3_centrality.txt")
 l4_centrality = fetch_file(RELATIVE_PATH + "layers/l4_centrality.txt")
 global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/definition_1/global_ev_dict.txt")
 global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/definition_2/global_ev_dict.txt")
-avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee_bug/assignee_avg_fixed_time.txt")
-print(avg_fixed_time)
+avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
+reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")
 
 for i in who:
     w_a = who_assignee[i]
@@ -76,7 +76,10 @@ for i in who:
         gl_b = '-'
 
     avg = avg_fixed_time[i]
-    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg]
+
+    rp = reopened_percent[i]
+
+    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp]
 
     sheet.append(row)
 
