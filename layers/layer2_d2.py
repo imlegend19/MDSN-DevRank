@@ -141,28 +141,36 @@ with db:
     ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
     ec.reverse()
 
-    print("Fetching developers...")
-    cur.execute("SELECT DISTINCT who_id, who FROM comment")
+    who_centrality = {}
 
-    developer = {}
-    for i in cur.fetchall():
-        developer[i[0]] = i[1]
-
-    print("Setting up excel sheet...")
-    wb = openpyxl.Workbook()
-    sheet = wb.active
-
-    sheet.append(["Rank", "Id", "Who", "Centrality"])
-    sheet.append(["", "", "", ""])
-
-    print("Ranking developers...")
-
-    rank = 1
     for i in ec:
-        sheet.append([str(rank), i[1], developer[i[1]], i[0]])
-        rank += 1
+        who_centrality[i[1]] = i[0]
 
-    print("Saving...")
-    wb.save("layer2_ranks_fc.xlsx")
+    with open("l2_d2_centrality.txt", 'wb') as fp:
+        pickle.dump(who_centrality, fp)
 
-    print("Process Complete!")
+    # print("Fetching developers...")
+    # cur.execute("SELECT DISTINCT who_id, who FROM comment")
+    #
+    # developer = {}
+    # for i in cur.fetchall():
+    #     developer[i[0]] = i[1]
+    #
+    # print("Setting up excel sheet...")
+    # wb = openpyxl.Workbook()
+    # sheet = wb.active
+    #
+    # sheet.append(["Rank", "Id", "Who", "Centrality"])
+    # sheet.append(["", "", "", ""])
+    #
+    # print("Ranking developers...")
+    #
+    # rank = 1
+    # for i in ec:
+    #     sheet.append([str(rank), i[1], developer[i[1]], i[0]])
+    #     rank += 1
+    #
+    # print("Saving...")
+    # wb.save("layer2_ranks_fc.xlsx")
+    #
+    # print("Process Complete!")

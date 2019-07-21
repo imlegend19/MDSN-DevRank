@@ -124,6 +124,14 @@ def layer1(product_id):
         ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
         ec.reverse()
 
+        who_centrality = {}
+
+        for i in ec:
+            who_centrality[i[1]] = i[0]
+
+        with open("l1_centrality.txt", 'wb') as fp:
+            pickle.dump(who_centrality, fp)
+
         if product_id is None:
             print("Fetching developers...")
             cur.execute("SELECT DISTINCT who_id, who FROM test_comment_fixed_closed")

@@ -1,5 +1,4 @@
 import pickle
-from urllib import request
 
 from local_settings import db
 from bs4 import BeautifulSoup
@@ -33,6 +32,9 @@ with db:
 
     print(segregated_assignees)
     print(len(segregated_assignees))
+
+    with open("assignee_who.txt", 'wb') as fp:
+        pickle.dump(segregated_assignees, fp)
 
     cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bug_fixed_closed")
 

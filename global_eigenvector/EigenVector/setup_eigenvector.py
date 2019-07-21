@@ -26,9 +26,9 @@ with open('/home/imlegend19/PycharmProjects/Research - Data Mining/adjacency_mat
 
 relative_id = {v: k for k, v in rel_id.items()}
 
-final_ev_who = []
+final_ev_who = {}
 for i in range(1134):
-    final_ev_who.append((relative_id[z[i]], ev_centrality[i]))
+    final_ev_who[relative_id[z[i]]] = ev_centrality[i]
 
 with open('global_ev_dict.txt', 'wb') as fp:
     pickle.dump(final_ev_who, fp)

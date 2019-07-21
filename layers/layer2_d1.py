@@ -145,6 +145,14 @@ with db:
     ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
     ec.reverse()
 
+    who_centrality = {}
+
+    for i in ec:
+        who_centrality[i[1]] = i[0]
+
+    with open("l2_d1_centrality.txt", 'wb') as fp:
+        pickle.dump(who_centrality, fp)
+
     print("Fetching developers...")
     cur.execute("SELECT DISTINCT who_id, who FROM comment")
 
