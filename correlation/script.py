@@ -16,7 +16,8 @@ wb = openpyxl.Workbook()
 sheet = wb.active
 
 titles = ["Assignee Id", "Assignee", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
-          "L4 Centrality", "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent"]
+          "L4 Centrality", "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
+          "Assignee Component"]
 
 sheet.append(titles)
 sheet.append(["" for i in range(len(titles))])
@@ -36,6 +37,7 @@ global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVecto
 global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/definition_2/global_ev_dict.txt")
 avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
 reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")
+assignee_comp = fetch_file(RELATIVE_PATH + "assignee/assignee_component.txt")
 
 for i in who:
     w_a = who_assignee[i]
@@ -76,10 +78,10 @@ for i in who:
         gl_b = '-'
 
     avg = avg_fixed_time[i]
-
     rp = reopened_percent[i]
+    comp = assignee_comp[i]
 
-    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp]
+    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp]
 
     sheet.append(row)
 

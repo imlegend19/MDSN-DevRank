@@ -36,7 +36,7 @@ with db:
     assignee_comp = {}
     for i in cur.fetchall():
         if i[0].strip() in segregated_assignees:
-            assignee_comp[i[0].strip()] = i[1]
+            assignee_comp[segregated_assignees[i[0].strip()]] = i[1]
 
     print(assignee_comp)
     with open('assignee_component.txt', 'wb') as fp:
