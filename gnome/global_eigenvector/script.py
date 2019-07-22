@@ -77,12 +77,15 @@ print(pev.shape)
 print(pev)
 print(sum(map(lambda x: x.real * x.real, pev)))
 
-print("Saving eigenvector...")
-with open("global_eigenvector_fc.txt", 'wb') as fp:
-    pickle.dump(pev, fp)
+for i in pev:
+    print(i)
 
-print("Saving eigenvalues...")
-with open("eigenvalue_" + str(ind) + "_fc.txt", "wb") as fp:
-    pickle.dump(e_val[ind], fp)
+# print("Saving eigenvector...")
+# with open("global_eigenvector_fc.txt", 'wb') as fp:
+#     pickle.dump(pev, fp)
+#
+# print("Saving eigenvalues...")
+# with open("eigenvalue_" + str(ind) + "_fc.txt", "wb") as fp:
+#     pickle.dump(e_val[ind], fp)
 
 print("Process finished!")
