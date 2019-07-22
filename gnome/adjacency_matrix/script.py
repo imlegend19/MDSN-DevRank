@@ -2,7 +2,7 @@ import pickle
 
 import numpy as np
 
-from local_settings import db
+from local_settings_gnome import db
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_2/"
 TOTAL = 0

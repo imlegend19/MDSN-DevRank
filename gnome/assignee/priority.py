@@ -1,5 +1,5 @@
 import pickle
-from local_settings import db
+from local_settings_gnome import db
 
 with db:
     cur = db.cursor()

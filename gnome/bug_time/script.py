@@ -1,7 +1,7 @@
 import pickle
 from datetime import datetime, timedelta
 
-from local_settings import db
+from local_settings_gnome import db
 
 PRODUCTS = [90, 186, 214, 76, 13, 34, 279, 39, 239, 87]
 

@@ -3,7 +3,7 @@ from datetime import datetime
 import networkx as nx
 import openpyxl
 
-from local_settings import db
+from local_settings_gnome import db
 
 """
 Layer 5 Network:

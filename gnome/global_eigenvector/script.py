@@ -1,7 +1,7 @@
 import pickle
 import numpy as np
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/"
 INFLUENCE_MATRIX = "influence_matrix/definition_2/"
 ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
 

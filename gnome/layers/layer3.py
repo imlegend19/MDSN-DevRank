@@ -3,7 +3,7 @@ from datetime import datetime
 
 import networkx as nx
 import openpyxl
-from local_settings import db
+from local_settings_gnome import db
 
 """
 Layer 3 Network: 
@@ -180,8 +180,8 @@ def layer3(product_id):
 
             who_centrality = {}
 
-            for i in ec:
-                who_centrality[i[1]] = i[0]
+            for i in who_centrality.values():
+                print(i)
 
             with open("l3_centrality.txt", 'wb') as fp:
                 pickle.dump(who_centrality, fp)

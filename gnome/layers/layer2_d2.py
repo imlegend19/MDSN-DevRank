@@ -3,7 +3,7 @@ from datetime import datetime
 
 import networkx as nx
 import openpyxl
-from local_settings import db
+from local_settings_gnome import db
 
 """
 Layer 2 Network: 
@@ -146,8 +146,8 @@ with db:
     for i in ec:
         who_centrality[i[1]] = i[0]
 
-    with open("l2_d2_centrality.txt", 'wb') as fp:
-        pickle.dump(who_centrality, fp)
+    # with open("l2_d2_centrality.txt", 'wb') as fp:
+    #     pickle.dump(who_centrality, fp)
 
     # print("Fetching developers...")
     # cur.execute("SELECT DISTINCT who_id, who FROM comment")

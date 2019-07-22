@@ -3,7 +3,7 @@ from itertools import permutations
 
 import openpyxl
 import networkx as nx
-from local_settings import db
+from local_settings_gnome import db
 
 """
 Layer 1 Network: 
@@ -14,19 +14,11 @@ Dataset Used : gnomebug
 Table : comment
 """
 
-"""
-Saving edges of layer 1 
-"""
 
-
+# Saving edges of layer 1
 def save_edges(edges):
     with open('layer1_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
-
-
-"""
-
-"""
 
 
 def save_ranks(developer, ec):
