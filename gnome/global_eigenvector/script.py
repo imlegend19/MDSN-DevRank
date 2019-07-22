@@ -29,6 +29,8 @@ A3 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A3_fc.txt"))
 A4 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A4_fc.txt"))
 influence_matrix = np.array(fetch_file(RELATIVE_PATH + INFLUENCE_MATRIX + "influence_matrix_fc.txt"))
 
+print(influence_matrix.shape)
+
 krp = []
 
 for i in range(4):
@@ -36,6 +38,11 @@ for i in range(4):
     wa2 = A2 * influence_matrix[i][1]
     wa3 = A3 * influence_matrix[i][2]
     wa4 = A4 * influence_matrix[i][3]
+
+    print(influence_matrix[i][0])
+    print(influence_matrix[i][1])
+    print(influence_matrix[i][2])
+    print(influence_matrix[i][3])
 
     for j in range(1134):
         row = []
@@ -76,9 +83,6 @@ print(pev.shape)
 
 print(pev)
 print(sum(map(lambda x: x.real * x.real, pev)))
-
-for i in pev:
-    print(i)
 
 # print("Saving eigenvector...")
 # with open("global_eigenvector_fc.txt", 'wb') as fp:

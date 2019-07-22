@@ -3,7 +3,7 @@ from itertools import permutations
 
 import openpyxl
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks/definition_2/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/ranks/definition_2/"
 NO_OF_LAYERS = 4
 
 
