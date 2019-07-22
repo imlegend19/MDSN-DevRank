@@ -1,5 +1,6 @@
 import pickle
 import numpy as np
+from scipy.linalg import eigh as largest_eigh
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
 INFLUENCE_MATRIX = "influence_matrix/definition_1/"
@@ -60,10 +61,12 @@ A2 = None
 A3 = None
 influence_matrix = None
 
-print("Calculating eigenvalues...")
-e = np.linalg.eigvals(krp)
+# print("Calculating eigenvalues...")
+# e = np.linalg.eigvals(krp)
+#
+# mx_eigenvalue = max(e)
 
-mx_eigenvalue = max(e)
+val, vec = largest_eigh(krp, eigvals=(4121 - 10, 4120))
 
 # pev = e_vec[ind] / np.linalg.norm(e_vec[ind])
 #
