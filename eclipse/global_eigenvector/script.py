@@ -1,6 +1,6 @@
 import pickle
 import numpy as np
-from scipy.linalg import eigh as largest_eigh
+from scipy.sparse.linalg import eigs
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
 INFLUENCE_MATRIX = "influence_matrix/definition_1/"
@@ -45,7 +45,7 @@ for i in range(3):
     print(influence_matrix[i][2])
     # print(influence_matrix[i][3])
 
-    for j in range(4121):
+    for j in range(2754):
         row = []
 
         row.extend(wa1[j])
@@ -61,30 +61,25 @@ A2 = None
 A3 = None
 influence_matrix = None
 
-# print("Calculating eigenvalues...")
-# e = np.linalg.eigvals(krp)
-#
-# mx_eigenvalue = max(e)
+print("Calculating eigenvalues...")
+e_val, e_vec = eigs(np.array(krp))
 
-val, vec = largest_eigh(krp, eigvals=(4121 - 10, 4120))
+mx_ev_index = list(e_val).index(max(e_val))
+mx_ev = max(e_val)
 
-# pev = e_vec[ind] / np.linalg.norm(e_vec[ind])
-#
-# print(pev.shape)
-#
-# print(pev)
-# print(sum(map(lambda x: x.real * x.real, pev)))
-#
-# print("Saving eigenvector...")
-# with open("global_eigenvector_fc.txt", 'wb') as fp:
-#     pickle.dump(pev, fp)
-#
+pev = e_vec[mx_ev_index] / np.linalg.norm(e_vec[mx_ev_index])
+
+print(pev.shape)
+
+print(pev)
+print(sum(map(lambda x: x.real * x.real, pev)))
+
+print("Saving eigenvector...")
+with open("global_eigenvector_fc.txt", 'wb') as fp:
+    pickle.dump(pev, fp)
+
 print("Saving principal eigenvalue...")
 with open("principal_eigenvalue_fc.txt", "wb") as fp:
-    pickle.dump(val, fp)
-
-print("Saving principal eigenvector...")
-with open("principal_eigenvalue_fc.txt", "wb") as fp:
-    pickle.dump(vec, fp)
+    pickle.dump(mx_ev, fp)
 
 print("Process finished!")

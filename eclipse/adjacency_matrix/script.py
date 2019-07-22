@@ -1,5 +1,4 @@
 import pickle
-
 import numpy as np
 
 from local_settings_eclipse import db
