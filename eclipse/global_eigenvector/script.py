@@ -81,6 +81,10 @@ val, vec = largest_eigh(krp, eigvals=(4121 - 10, 4120))
 #
 print("Saving principal eigenvalue...")
 with open("principal_eigenvalue_fc.txt", "wb") as fp:
-    pickle.dump(mx_eigenvalue, fp)
+    pickle.dump(val, fp)
+
+print("Saving principal eigenvector...")
+with open("principal_eigenvalue_fc.txt", "wb") as fp:
+    pickle.dump(vec, fp)
 
 print("Process finished!")
