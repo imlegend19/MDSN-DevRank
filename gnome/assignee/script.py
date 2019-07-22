@@ -52,6 +52,9 @@ with db:
     print(len(assignee_bug))
     print(assignee_bug)
 
+    with open("assignee_bug.txt", 'wb') as fp:
+        pickle.dump(assignee_bug, fp)
+
     for i in list(assignee_bug):
         if i not in segregated_assignees.keys():
             assignee_bug.pop(i)

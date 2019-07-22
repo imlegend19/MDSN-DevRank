@@ -17,7 +17,7 @@ sheet = wb.active
 
 titles = ["Assignee Id", "Assignee", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
           "L4 Centrality", "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
-          "Assignee Component"]
+          "Assignee Component", "Total Bugs", "Priority", "Severity"]
 
 sheet.append(titles)
 sheet.append(["" for i in range(len(titles))])
@@ -38,6 +38,9 @@ global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVecto
 avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
 reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")
 assignee_comp = fetch_file(RELATIVE_PATH + "assignee/assignee_component.txt")
+tot_bugs = fetch_file(RELATIVE_PATH + "assignee/assignee_total_bugs.txt")
+priority = fetch_file(RELATIVE_PATH + "assignee/assignee_priority_count.txt")
+severity = fetch_file(RELATIVE_PATH + "assignee/assignee_severity_count.txt")
 
 for i in who:
     w_a = who_assignee[i]
@@ -80,9 +83,13 @@ for i in who:
     avg = avg_fixed_time[i]
     rp = reopened_percent[i]
     comp = assignee_comp[i]
+    bugs = tot_bugs[i]
+    pri = str(priority[i])
+    sev = str(severity[i])
 
-    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp]
+    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp, bugs, pri, sev]
 
     sheet.append(row)
 
 wb.save("correlation.xlsx")
+print("Finished!")

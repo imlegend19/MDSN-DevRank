@@ -1,8 +1,8 @@
 import pickle
 import openpyxl
-from layers.layer1 import layer1
-from layers.layer3 import layer3
-from layers.layer4 import layer4
+from gnome.layers.layer1 import layer1
+from gnome.layers.layer3 import layer3
+from gnome.layers.layer4 import layer4
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_2/"
 TIME_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/bug_time/product_avg_time.txt"
