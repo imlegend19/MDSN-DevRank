@@ -107,3 +107,4 @@ venv.bak/
 .mypy_cache/
 
 assignee_bug/bug_html/*
+eclipse/assignee/bug_html/*

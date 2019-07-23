@@ -1,9 +1,9 @@
 import pickle
 import numpy as np
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/"
-INFLUENCE_MATRIX = "influence_matrix/definition_2/"
-ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
+RELATIVE_PATH = "/home/yugandhar/PycharmProjects/Data-Mining-Research/gnome/"
+INFLUENCE_MATRIX = "influence_matrix/definition_1/"
+ADJACENCY_MATRIX = "adjacency_matrix/definition_1/"
 
 
 def fetch_file(path):

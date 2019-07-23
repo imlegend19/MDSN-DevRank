@@ -5,6 +5,7 @@ from local_settings_eclipse import db
 from bs4 import BeautifulSoup
 from dateutil import parser
 
+not_downloaded_bugs = []
 with db:
     print("Connected to db...")
 
@@ -34,12 +35,22 @@ with db:
     bugs = set()
     for i in assignee_bug.values():
         for j in i:
-            bugs.add(j)
+              bugs.add(j)
 
-    cnt = len(bugs)
-    for i in bugs:
+cnt = len(bugs)
+for i in bugs:
+    try:
         print("Remaining", cnt)
-        request.urlretrieve(url + str(j), "bug_html/" + str(j) + ".html")
-        cnt -= 1
+        request.urlretrieve(url + str(i), "bug_html/" + str(i) + ".html")
 
-    print("Process Finished!")
+    except:
+        url_not_downloaded=url + str(i)
+        not_downloaded_bugs.append(url_not_downloaded)
+        print(not_downloaded_bugs)
+    cnt -= 1
+
+
+with open("not_downloaded_bugs.txt",'wb') as fp:
+    pickle.dump(not_downloaded_bugs,fp)
+
+print("Process Finished!")
