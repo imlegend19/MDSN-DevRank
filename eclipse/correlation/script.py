@@ -45,8 +45,6 @@ priority = fetch_file(RELATIVE_PATH + "assignee/assignee_priority_count.txt")
 severity = fetch_file(RELATIVE_PATH + "assignee/assignee_severity_count.txt")
 
 for i in who:
-    w_a = who_assignee[i]
-
     try:
         l1 = l1_centrality[i]
     except KeyError:
@@ -68,11 +66,6 @@ for i in who:
         l3 = '-'
 
     try:
-        l4 = l4_centrality[i]
-    except KeyError:
-        l4 = '-'
-
-    try:
         gl_a = global_d1_centrality[i]
     except KeyError:
         gl_a = '-'
@@ -82,14 +75,19 @@ for i in who:
     except KeyError:
         gl_b = '-'
 
-    avg = avg_fixed_time[i]
-    rp = reopened_percent[i]
+    try:
+        avg = avg_fixed_time[i]
+    except KeyError:
+        avg = '-'
+        print(i)
+
+    rp = (reopened_percent[i][0] / reopened_percent[i][1]) * 100
     comp = assignee_comp[i]
     bugs = tot_bugs[i]
     pri = str(priority[i])
     sev = str(severity[i])
 
-    row = [i, w_a, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp, bugs, pri, sev]
+    row = [i, l1, l2_d1, l2_d2, l3, gl_a, gl_b, avg, rp, comp, bugs, pri, sev]
 
     sheet.append(row)
 

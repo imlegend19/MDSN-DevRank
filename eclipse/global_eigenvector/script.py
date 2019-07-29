@@ -3,8 +3,8 @@ import numpy as np
 from scipy.sparse.linalg import eigs
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
-INFLUENCE_MATRIX = "influence_matrix/definition_1/"
-ADJACENCY_MATRIX = "adjacency_matrix/definition_1/"
+INFLUENCE_MATRIX = "influence_matrix/definition_2/"
+ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
 
 
 def fetch_file(path):
@@ -61,17 +61,26 @@ A2 = None
 A3 = None
 influence_matrix = None
 
+print("Setting up kr_product...")
+kr_product = np.array(krp, dtype=np.float)
+krp.clear()
+
+print(kr_product.shape)
+print(kr_product)
+
 print("Calculating eigenvalues...")
-e_val, e_vec = eigs(np.array(krp))
+e = np.linalg.eig(kr_product)
+
+e_val = e[0]
+e_vec = e[1]
 
 mx_ev_index = list(e_val).index(max(e_val))
-mx_ev = max(e_val)
+print(mx_ev_index)
 
 pev = e_vec[mx_ev_index] / np.linalg.norm(e_vec[mx_ev_index])
 
 print(pev.shape)
 
-print(pev)
 print(sum(map(lambda x: x.real * x.real, pev)))
 
 print("Saving eigenvector...")
@@ -80,6 +89,6 @@ with open("global_eigenvector_fc.txt", 'wb') as fp:
 
 print("Saving principal eigenvalue...")
 with open("principal_eigenvalue_fc.txt", "wb") as fp:
-    pickle.dump(mx_ev, fp)
+    pickle.dump(e_val[mx_ev_index], fp)
 
 print("Process finished!")

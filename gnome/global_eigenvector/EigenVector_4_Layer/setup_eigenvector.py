@@ -13,7 +13,7 @@ who = [x for x in range(1134)]
 
 for i in range(1134):
     ev_centrality.append(ge[i].real + ge[i + 1134].real
-                         + ge[i + (1134 * 2)].real)
+                         + ge[i + (1134 * 2)].real + ge[i + (1134 * 3)].real)
 
 z = [x for (y, x) in sorted(zip(ev_centrality, who), key=lambda pair: pair[0], reverse=True)]
 # print(z)
