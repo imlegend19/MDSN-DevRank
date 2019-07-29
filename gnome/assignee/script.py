@@ -73,6 +73,7 @@ with db:
     for i in assignee_bug.values():
         for j in i:
             print("Ongoing", j)
+
             with open('bug_html/' + str(j) + '.html', 'rb') as fp:
                 html = fp.read()
 
@@ -135,65 +136,60 @@ def calculate():
     for i in assignee_bug.values():
         for j in i:
 
-            print("Remaining", cnt)
+            # print("Remaining", cnt)
             request.urlretrieve(url + str(j), "bug_html/" + str(j) + ".html")
 
-
-
-            cnt -= 1
+            # cnt -= 1
             # print("Ongoing", j)
 
+            with open('bug_html/' + str(j) + '.html', 'rb') as fp:
+                html = fp.read()
 
-        with open('bug_html/' + str(j) + '.html', 'rb') as fp:
-            html = fp.read()
+            soup = BeautifulSoup(html, features="html.parser")
 
-        soup = BeautifulSoup(html, features="html.parser")
+            div = soup.find("div", attrs={"id": "bugzilla-body"})
+            table = div.find("table")
 
-        div = soup.find("div", attrs={"id": "bugzilla-body"})
-        table = div.find("table")
+            # headings = [th.get_text() for th in table.find("tr").find_all("th")]
+            # print(headings)
 
-        headings = [th.get_text() for th in table.find("tr").find_all("th")]
+            data = []
+            for row in table.find_all("tr")[1:]:
+                dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
+                data.append(dataset)
 
-        # print(headings)
+            print(data)
 
-        data = []
-        for row in table.find_all("tr")[1:]:
-            dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
-            data.append(dataset)
+            assignee_pet_name.append(data[0][0])
 
-        print(data)
+            with open('bug_table' + str(j) + '.txt', 'wb') as fp:
+                pickle.dump(data, fp)
 
-        assignee_pet_name.append(data[0][0])
+            assigned_time = parser.parse(data[0][1])
 
-        with open('bug_table' + str(j) + '.txt', 'wb') as fp:
-            pickle.dump(data, fp)
+            it = -1
+            while True:
+                if data[it][-1] == 'VERIFIED' or data[it][-1] == 'WONTFIX':
+                    while True:
+                        if len(data[it]) == 3:
+                            it -= 1
+                        else:
+                            break
+                    break
+                else:
+                    it -= 1
 
-        assigned_time = parser.parse(data[0][1])
+            finished_time = parser.parse(data[it][1])
 
-        it = -1
-        while True:
-            if data[it][-1] == 'VERIFIED' or data[it][-1] == 'WONTFIX':
-                while True:
-                    if len(data[it]) == 3:
-                        it -= 1
-                    else:
-                        break
-                break
+            assignee = list(assignee_bug.keys())[list(assignee_bug.values()).index(i)]
+
+            if assignee in assignee_fixed_time:
+                time = assignee_fixed_time[assignee][0] + (finished_time - assigned_time)
+                cnt = assignee_fixed_time[assignee][1] + 1
+
+                assignee_fixed_time[assignee] = [time, cnt]
             else:
-                it -= 1
+                assignee_fixed_time[assignee] = [finished_time - assigned_time, 1]
 
-        finished_time = parser.parse(data[it][1])
-
-        assignee = list(assignee_bug.keys())[list(assignee_bug.values()).index(i)]
-
-        if assignee in assignee_fixed_time:
-            time = assignee_fixed_time[assignee][0] + (finished_time - assigned_time)
-            cnt = assignee_fixed_time[assignee][1] + 1
-
-            assignee_fixed_time[assignee] = [time, cnt]
-        else:
-            assignee_fixed_time[assignee] = [finished_time - assigned_time, 1]
-
-# with open('assignee_fixed_time.txt', 'wb') as fp:
-#     pickle.dump(assignee_fixed_time, fp)
-
+    # with open('assignee_fixed_time.txt', 'wb') as fp:
+    #     pickle.dump(assignee_fixed_time, fp)

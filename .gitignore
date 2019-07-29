@@ -106,5 +106,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-assignee_bug/bug_html/*
+gnome/assignee/bug_html/*
 eclipse/assignee/bug_html/*
