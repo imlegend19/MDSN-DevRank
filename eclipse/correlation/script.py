@@ -76,7 +76,7 @@ for i in who:
         gl_b = '-'
 
     try:
-        avg = avg_fixed_time[i]
+        avg = avg_fixed_time[i].days * 24 + avg_fixed_time[i].seconds / 3600
     except KeyError:
         avg = '-'
         print(i)
@@ -91,5 +91,5 @@ for i in who:
 
     sheet.append(row)
 
-wb.save("correlation.xlsx")
+wb.save("correlation_eclipse_1.xlsx")
 print("Finished!")

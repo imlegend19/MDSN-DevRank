@@ -15,7 +15,7 @@ RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/"
 wb = openpyxl.Workbook()
 sheet = wb.active
 
-titles = ["Assignee Id", "Assignee", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
+titles = ["Assignee Id", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
           "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
           "Assignee Component", "Total Bugs", "Priority", "Severity"]
 
@@ -74,16 +74,16 @@ for i in who:
     except KeyError:
         gl_b = '-'
 
-    avg = avg_fixed_time[i]
+    avg = avg_fixed_time[i].days * 24 + avg_fixed_time[i].seconds / 3600
     rp = reopened_percent[i]
     comp = assignee_comp[i]
     bugs = tot_bugs[i]
     pri = str(priority[i])
     sev = str(severity[i])
 
-    row = [i, w_a, l1, l2_d1, l2_d2, l3, gl_a, gl_b, avg, rp, comp, bugs, pri, sev]
+    row = [i, l1, l2_d1, l2_d2, l3, gl_a, gl_b, avg, rp, comp, bugs, pri, sev]
 
     sheet.append(row)
 
-wb.save("correlation.xlsx")
+wb.save("correlation_gnome_1.xlsx")
 print("Finished!")
