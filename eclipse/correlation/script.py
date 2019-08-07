@@ -18,7 +18,7 @@ sheet = wb.active
 titles = ["Assignee Id", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
           "L4 Centrality",
           "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
-          "Assignee Component", "Total Bugs", "First Closed Avg Time", "Priority", "Severity"]
+          "Assignee Component", "Total Bugs", "First Closed Avg Time", "Priority/Bug", "Severity/Bug"]
 
 sheet.append(titles)
 sheet.append(["" for i in range(len(titles))])
@@ -130,8 +130,8 @@ for i in who:
         comp = assignee_comp[i]
         bugs = tot_bugs[i]
         aft = av_ft[i].days * 24 + av_ft[i].seconds / 3600
-        pri = get_priority_points(priority[i])
-        sev = get_severity_points(severity[i])
+        pri = get_priority_points(priority[i]) / tot_bugs[i]
+        sev = get_severity_points(severity[i]) / tot_bugs[i]
 
         row = [i, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp, bugs, aft, pri, sev]
 
