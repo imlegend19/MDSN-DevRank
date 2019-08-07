@@ -1,7 +1,7 @@
 import openpyxl
 from itertools import permutations
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/ranks_normal/"
 NO_OF_LAYERS = 6
 TOP = [10, 20, 50, 100, 500, 1000]
 
@@ -71,7 +71,7 @@ Mismatches
 Average difference
 """
 
-print("Fetching ranks of all layers...")
+print("Fetching ranks_normal of all layers...")
 
 layer_dict = []
 for _ in range(NO_OF_LAYERS):

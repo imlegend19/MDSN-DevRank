@@ -127,7 +127,7 @@ def layer5(product_id):
         edges = set()
 
         if product_id is None:
-            print("Setting up edges...")
+            print("Setting up edges_normal...")
 
         start = datetime.now().now()
 
@@ -151,7 +151,7 @@ def layer5(product_id):
 
         if product_id is None:
             print("Start Time:", start, "End Time:", end)
-            print("Writing layer 5 edges to text file...")
+            print("Writing layer 5 edges_normal to text file...")
 
             save_edges(edges)
 
@@ -169,7 +169,7 @@ def layer5(product_id):
             graph.add_edges_from(list(edges))
 
             if product_id is None:
-                print("Total edges =", len(edges))
+                print("Total edges_normal =", len(edges))
                 print("Calculating eigenvector centrality...")
 
             centrality = nx.eigenvector_centrality(graph)

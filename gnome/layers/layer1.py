@@ -15,7 +15,7 @@ Table : comment
 """
 
 
-# Saving edges of layer 1
+# Saving edges_normal of layer 1
 def save_edges(edges):
     with open('layer1_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
@@ -93,7 +93,7 @@ def layer1(product_id):
                 del bug_who[i]
 
         if product_id is None:
-            print("Setting up edges...")
+            print("Setting up edges_normal...")
 
         edges = set()
         for i in bug_who.values():
@@ -103,8 +103,8 @@ def layer1(product_id):
                     edges.add(j)
 
         # if product_id is None:
-        #     save_edges(edges)
-        #     print("Saved edges! Total edges:", len(edges))
+        #     save_edges(edges_normal)
+        #     print("Saved edges_normal! Total edges_normal:", len(edges_normal))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))

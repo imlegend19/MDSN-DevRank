@@ -16,6 +16,7 @@ wb = openpyxl.Workbook()
 sheet = wb.active
 
 titles = ["Assignee Id", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
+          "L4 Centrality",
           "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
           "Assignee Component", "Total Bugs", "First Closed Avg Time", "Priority", "Severity"]
 
@@ -35,8 +36,11 @@ l1_centrality = fetch_file(RELATIVE_PATH + "layers/l1_centrality.txt")
 l2_d1_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d1_centrality.txt")
 l2_d2_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d2_centrality.txt")
 l3_centrality = fetch_file(RELATIVE_PATH + "layers/l3_centrality.txt")
-global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/definition_1/global_ev_dict.txt")
-global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/definition_2/global_ev_dict.txt")
+l4_centrality = fetch_file(RELATIVE_PATH + "layers/l4_centrality.txt")
+global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
+                                                  "definition_1/global_ev_dict.txt")
+global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
+                                                  "definition_2/global_ev_dict.txt")
 avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
 reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")
 assignee_comp = fetch_file(RELATIVE_PATH + "assignee/assignee_component.txt")
@@ -82,6 +86,7 @@ def get_severity_points(severity):
     return points
 
 
+cnt = 0
 for i in who:
     try:
         l1 = l1_centrality[i]
@@ -102,7 +107,10 @@ for i in who:
 
         sheet.append(row)
     except Exception:
+        print(i)
+        cnt += 1
         pass
 
 wb.save("correlation_eclipse_1.xlsx")
 print("Finished!")
+print("Error count:", cnt)

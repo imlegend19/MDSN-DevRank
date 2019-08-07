@@ -128,7 +128,7 @@ def layer3(product_id):
         edges = set()
 
         if product_id is None:
-            print("Setting up edges...")
+            print("Setting up edges_normal...")
 
         start = datetime.now().now()
 
@@ -153,7 +153,7 @@ def layer3(product_id):
         if product_id is None:
             print("Start Time:", start, "End Time:", end)
 
-            print("Writing layer 3 edges to text file...")
+            print("Writing layer 3 edges_normal to text file...")
             save_edges(edges)
 
             print("Process Successful! Total Edges =", len(edges))
@@ -170,7 +170,7 @@ def layer3(product_id):
             graph.add_edges_from(list(edges))
 
             if product_id is None:
-                print("Total edges =", len(edges))
+                print("Total edges_normal =", len(edges))
                 print("Calculating eigenvector centrality...")
 
             centrality = nx.eigenvector_centrality(graph)
@@ -211,7 +211,7 @@ def layer3(product_id):
             print(e.args)
             print("Process Unsuccessful!")
 
-            print("Filled", len(graph.edges.data()), "edges out of", len(edges))
+            print("Filled", len(graph.edges.data()), "edges_normal out of", len(edges))
 
 
 layer3(None)

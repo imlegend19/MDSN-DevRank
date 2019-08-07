@@ -97,7 +97,7 @@ with db:
 
     edges = set()
 
-    print("Setting up edges...")
+    print("Setting up edges_normal...")
 
     start = datetime.now().now()
 
@@ -120,7 +120,7 @@ with db:
 
     print("Start Time:", start, "End Time:", end)
 
-    print("Writing layer 2 edges to text file...")
+    print("Writing layer 2 edges_normal to text file...")
 
     with open('layer2_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
@@ -137,7 +137,7 @@ with db:
     graph = nx.DiGraph()
     graph.add_edges_from(list(edges))
 
-    print("Total edges =", len(edges))
+    print("Total edges_normal =", len(edges))
 
     print("Calculating eigenvector centrality...")
     centrality = nx.eigenvector_centrality(graph)

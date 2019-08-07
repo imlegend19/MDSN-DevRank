@@ -20,13 +20,6 @@ with db:
     print("Connected to db!")
     cur = db.cursor()
 
-    print("Fetching developers...")
-    cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
-    dev = []
-
-    for i in cur.fetchall():
-        dev.append(i[0])
-
     product_component_bug = {}
 
     print("Setting up product-bug...")
@@ -49,13 +42,11 @@ with db:
 
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
-            if i[1] in dev:
-                val = bug_who[i[0]]
-                val.add(i[1])
-                bug_who[i[0]] = val
+            val = bug_who[i[0]]
+            val.add(i[1])
+            bug_who[i[0]] = val
         else:
-            if i[1] in dev:
-                bug_who[i[0]] = {i[1]}
+            bug_who[i[0]] = {i[1]}
 
     print("Fetched!")
 
@@ -94,7 +85,7 @@ with db:
 
     edges = set()
 
-    print("Setting up edges...")
+    print("Setting up edges_normal...")
 
     start = datetime.now().now()
 
@@ -108,7 +99,7 @@ with db:
 
         for j in val:
             for k in val:
-                if j[0] != k[0]:
+                if j[1] != k[1]:
                     edges.add((j[1], k[1]))
 
         counter += 1
@@ -117,24 +108,18 @@ with db:
 
     print("Start Time:", start, "End Time:", end)
 
-    print("Writing layer 2 edges to text file...")
+    print("Writing layer 2 edges_normal to text file...")
 
     with open('layer2_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 
     print("Process Successful! Total Edges =", len(edges))
 
-    for i in edges:
-        if i[0] in dev and i[1] in dev:
-            pass
-        else:
-            print("NOOOOOOOO")
-
     print("Building graph...")
     graph = nx.DiGraph()
     graph.add_edges_from(list(edges))
 
-    print("Total edges =", len(edges))
+    print("Total edges_normal =", len(edges))
 
     print("Calculating eigenvector centrality...")
     centrality = nx.eigenvector_centrality(graph)

@@ -147,7 +147,7 @@ def layer6(product_id):
 
         if product_id is None:
             print("Start Time:", start, "End Time:", end)
-            print("Writing layer 6 edges to text file...")
+            print("Writing layer 6 edges_normal to text file...")
             save_edges(edges)
             print("Process Successful! Total Edges =", len(edges))
 
@@ -163,7 +163,7 @@ def layer6(product_id):
             graph.add_edges_from(list(edges))
 
             if product_id is None:
-                print("Total edges =", len(edges))
+                print("Total edges_normal =", len(edges))
                 print("Calculating eigenvector centrality...")
 
             centrality = nx.eigenvector_centrality(graph)

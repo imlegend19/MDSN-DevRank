@@ -20,14 +20,17 @@ def fetch_adj_mat(column):
 
 print("Fetching files...")
 A1 = np.array(
-    fetch_file("/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix/definition_2/A1_fc.txt"))
+    fetch_file(
+        "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix_normal/definition_2/A1_fc.txt"))
 A2 = np.array(
-    fetch_file("/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix/definition_2/A1_fc.txt"))
+    fetch_file(
+        "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix_normal/definition_2/A1_fc.txt"))
 A3 = np.array(
-    fetch_file("/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix/definition_2/A1_fc.txt"))
+    fetch_file(
+        "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix_normal/definition_2/A1_fc.txt"))
 # A4 = np.array(fetch_file(RELATIVE_PATH + ADJACENCY_MATRIX + "A4_fc.txt"))
 influence_matrix = np.array(fetch_file(
-    "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/influence_matrix/definition_2/"
+    "/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/influence_matrix_normal/definition_2/"
     "influence_matrix_fc.txt"))
 
 print(influence_matrix.shape)
@@ -38,12 +41,12 @@ for i in range(3):
     wa1 = A1 * influence_matrix[i][0]
     wa2 = A2 * influence_matrix[i][1]
     wa3 = A3 * influence_matrix[i][2]
-    # wa4 = A4 * influence_matrix[i][3]
+    # wa4 = A4 * influence_matrix_normal[i][3]
 
     print(influence_matrix[i][0])
     print(influence_matrix[i][1])
     print(influence_matrix[i][2])
-    # print(influence_matrix[i][3])
+    # print(influence_matrix_normal[i][3])
 
     for j in range(1134):
         row = []

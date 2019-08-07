@@ -4,7 +4,7 @@ from gnome.layers.layer1 import layer1
 from gnome.layers.layer3 import layer3
 from gnome.layers.layer4 import layer4
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_2/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges_normal/definition_2/"
 TIME_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/bug_time/product_avg_time.txt"
 PRODUCTS = [90, 186, 214, 76, 13, 34, 279, 39, 239, 87]
 

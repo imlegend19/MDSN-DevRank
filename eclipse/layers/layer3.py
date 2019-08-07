@@ -49,18 +49,12 @@ def layer3(product_id):
 
         cur = db.cursor()
 
-        cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
-        dev = []
-
-        for i in cur.fetchall():
-            dev.append(i[0])
-
         if product_id is None:
             print("Fetching and setting up dict...")
 
-            cur.execute("select distinctrow bug_id, component_id from test_bugs_fixed_closed")
+            cur.execute("select distinctrow bug_id, reporter from test_bugs_fixed_closed")
         else:
-            cur.execute("select distinctrow bug_id, component_id from test_bugs_fixed_closed where product_id="
+            cur.execute("select distinctrow bug_id, reporter from test_bugs_fixed_closed where product_id="
                         + str(product_id))
 
         comp_bug = {}
@@ -83,13 +77,11 @@ def layer3(product_id):
 
         for i in cur.fetchall():
             if i[0] in bug_who.keys():
-                if i[1] in dev:
-                    val = bug_who[i[0]]
-                    val.add(i[1])
-                    bug_who[i[0]] = val
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
             else:
-                if i[1] in dev:
-                    bug_who[i[0]] = {i[1]}
+                bug_who[i[0]] = {i[1]}
 
         if product_id is None:
             print("Fetched!")
@@ -128,7 +120,7 @@ def layer3(product_id):
         edges = set()
 
         if product_id is None:
-            print("Setting up edges...")
+            print("Setting up edges_normal...")
 
         start = datetime.now().now()
 
@@ -143,7 +135,7 @@ def layer3(product_id):
 
             for j in val:
                 for k in val:
-                    if j[0] != k[0]:
+                    if j[1] != k[1]:
                         edges.add((j[1], k[1]))
 
             counter += 1
@@ -153,16 +145,10 @@ def layer3(product_id):
         if product_id is None:
             print("Start Time:", start, "End Time:", end)
 
-            print("Writing layer 3 edges to text file...")
+            print("Writing layer 3 edges_normal to text file...")
             save_edges(edges)
 
             print("Process Successful! Total Edges =", len(edges))
-
-        for i in edges:
-            if i[0] in dev and i[1] in dev:
-                pass
-            else:
-                print("NOOOOOOOO")
 
         graph = nx.DiGraph()
 
@@ -170,7 +156,7 @@ def layer3(product_id):
             graph.add_edges_from(list(edges))
 
             if product_id is None:
-                print("Total edges =", len(edges))
+                print("Total edges_normal =", len(edges))
                 print("Calculating eigenvector centrality...")
 
             centrality = nx.eigenvector_centrality(graph)
@@ -204,7 +190,7 @@ def layer3(product_id):
             print(e.args)
             print("Process Unsuccessful!")
 
-            print("Filled", len(graph.edges.data()), "edges out of", len(edges))
+            print("Filled", len(graph.edges.data()), "edges_normal out of", len(edges))
 
 
 layer3(None)

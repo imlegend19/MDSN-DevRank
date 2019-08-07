@@ -4,7 +4,7 @@ import numpy as np
 
 from local_settings_gnome import db
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges/definition_2/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/edges_normal/definition_2/"
 TOTAL = 0
 relative_ids = {}
 
@@ -45,7 +45,7 @@ print("Matrix dimensions:", TOTAL, "x", TOTAL)
 for i in range(1, 5):
     path = RELATIVE_PATH + "layer" + str(i) + "_edges_fc.txt"
 
-    print("Fetching edges...")
+    print("Fetching edges_normal...")
     with open(path, "rb") as fp:
         edges = pickle.load(fp)
 

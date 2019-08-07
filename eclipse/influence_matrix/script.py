@@ -4,7 +4,7 @@ from itertools import permutations
 import openpyxl
 
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/ranks/definition_2/"
-NO_OF_LAYERS = 3
+NO_OF_LAYERS = 4
 
 
 def fill_ranks_lst(sheet):
@@ -51,9 +51,10 @@ for _ in pairs:
 
 print(pairs)
 
-influence_matrix = [[1, 0, 0],
-                    [0, 1, 0],
-                    [0, 0, 1]]
+influence_matrix = [[1, 0, 0, 0],
+                    [0, 1, 0, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 1]]
 
 for i in pairs:
     print("Ongoing pair: %d, %d" % (i[0], i[1]))

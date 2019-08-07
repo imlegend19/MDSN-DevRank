@@ -1,6 +1,6 @@
 import pickle
 
-url = '/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/global_eigenvector/EigenVector/' \
+url = '/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/global_eigenvector_normal/EigenVector/' \
       'definition_2/global_eigenvector_fc.txt'
 
 with open(url, 'rb') as fp:
@@ -21,7 +21,8 @@ z = [x for (y, x) in sorted(zip(ev_centrality, who), key=lambda pair: pair[0], r
 ev_centrality.sort(reverse=True)
 # print(ev_centrality)
 
-with open('/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix/relative_id.txt', 'rb') as fp:
+with open('/home/imlegend19/PycharmProjects/Research - Data Mining/gnome/adjacency_matrix_normal/relative_id.txt',
+          'rb') as fp:
     rel_id = pickle.load(fp)
 
 relative_id = {v: k for k, v in rel_id.items()}

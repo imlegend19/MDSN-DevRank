@@ -47,12 +47,6 @@ def layer1(product_id):
 
         cur = db.cursor()
 
-        cur.execute("SELECT DISTINCT who_id FROM who_ids_commenting_on_more_than_10_bugs")
-        dev = []
-
-        for i in cur.fetchall():
-            dev.append(i[0])
-
         bug_who = {}
 
         if product_id is None:
@@ -65,51 +59,44 @@ def layer1(product_id):
 
         for i in cur.fetchall():
             if i[0] in bug_who.keys():
-                if i[1] in dev:
-                    val = bug_who[i[0]]
-                    val.add(i[1])
-                    bug_who[i[0]] = val
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
             else:
-                if i[1] in dev:
-                    bug_who[i[0]] = {i[1]}
+                bug_who[i[0]] = {i[1]}
 
-        if product_id is None:
-            print("Fetching bugs from test_bug...")
-            cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
-        else:
-            cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed WHERE product_id=" + str(product_id))
+        print("Fetching bugs from test_bug...")
+        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
 
         bugs = []
         for i in cur.fetchall():
             bugs.append(i[0])
 
-        if product_id is None:
-            print("Fetched!")
-            print("Updating bug_who...")
+        print("Fetched!")
+        print("Updating bug_who...")
 
         for i in list(bug_who.keys()):
             if i not in bugs:
                 del bug_who[i]
 
-        if product_id is None:
-            print("Setting up edges...")
+        print("Setting up edges_normal...")
 
         edges = set()
         for i in bug_who.values():
             if len(list(i)) > 1:
                 edg = list(permutations(list(i), 2))
                 for j in edg:
+                    if j[0] == j[1]:
+                        print('err')
                     edges.add(j)
 
-        if product_id is None:
-            save_edges(edges)
-            print("Saved edges! Total edges:", len(edges))
+        save_edges(edges)
+        print("Saved edges_normal! Total edges_normal:", len(edges))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))
 
-        if product_id is None:
-            print("Calculating eigenvector centrality...")
+        print("Calculating eigenvector centrality...")
         centrality = nx.eigenvector_centrality(graph)
 
         ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
@@ -123,21 +110,9 @@ def layer1(product_id):
         with open("l1_centrality.txt", 'wb') as fp:
             pickle.dump(who_centrality, fp)
 
-        if product_id is None:
-            save_ranks(ec)
-        else:
-            sum_ec = 0
+        save_ranks(ec)
 
-            for i in ec:
-                sum_ec += float(i[0])
-
-            avg_centrality = sum_ec / len(ec)
-            # print(product_id, ' : ', avg_centrality)
-
-            return avg_centrality
-
-        if product_id is None:
-            print("Process Competed!")
+        print("Process Competed!")
 
 
 layer1(None)

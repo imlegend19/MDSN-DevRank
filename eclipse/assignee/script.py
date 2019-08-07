@@ -28,7 +28,7 @@ with db:
 
     print(len(assignee_bug))
 
-    url = "https://bugs.eclipse.org/bugs/show_activity.cgi?id="
+    # url = "https://bugs.eclipse.org/bugs/show_activity.cgi?id="
 
     bugs = set()
     for i in assignee_bug.values():

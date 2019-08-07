@@ -10,7 +10,8 @@ relative_ids = {}
 with db:
     cur = db.cursor()
     print("Fetching relative id's...")
-    cur.execute("SELECT distinct who FROM test_longdescs_fixed_closed")
+    cur.execute(
+        "SELECT distinct who from test_longdescs_fixed_closed")
 
     who_ids = []
     for i in cur.fetchall():
@@ -21,6 +22,8 @@ with db:
     for i in who_ids:
         relative_ids[i] = TOTAL
         TOTAL += 1
+
+print(TOTAL)
 
 print("Saving relative id's...")
 with open("relative_id.txt", 'wb') as fp:
@@ -41,10 +44,10 @@ def transpose(a):
 
 print("Matrix dimensions:", TOTAL, "x", TOTAL)
 
-for i in range(1, 4):
+for i in range(1, 5):
     path = RELATIVE_PATH + "layer" + str(i) + "_edges_fc.txt"
 
-    print("Fetching edges...")
+    print("Fetching edges_normal...")
     with open(path, "rb") as fp:
         edges = pickle.load(fp)
 
@@ -56,6 +59,7 @@ for i in range(1, 4):
     print("Creating adjacency matrix...")
     for j in edges:
         x, y = j[0], j[1]
+        # print(x, y)
         matrix[relative_ids[x]][relative_ids[y]] = 1
 
     print("Calculating transpose...")
