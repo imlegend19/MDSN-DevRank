@@ -93,6 +93,7 @@ for i in who:
         l2_d1 = l2_d1_centrality[i]
         l2_d2 = l2_d2_centrality[i]
         l3 = l3_centrality[i]
+        l4 = l4_centrality[i]
         gl_a = global_d1_centrality[i]
         gl_b = global_d2_centrality[i]
         avg = avg_fixed_time[i].days * 24 + avg_fixed_time[i].seconds / 3600
@@ -103,7 +104,7 @@ for i in who:
         pri = get_priority_points(priority[i])
         sev = get_severity_points(severity[i])
 
-        row = [i, l1, l2_d1, l2_d2, l3, gl_a, gl_b, avg, rp, comp, bugs, aft, pri, sev]
+        row = [i, l1, l2_d1, l2_d2, l3, l4, gl_a, gl_b, avg, rp, comp, bugs, aft, pri, sev]
 
         sheet.append(row)
     except Exception:
