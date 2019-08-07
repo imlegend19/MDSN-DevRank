@@ -19,6 +19,11 @@ with db:
     cur = db.cursor()
 
     print("Fetching developers...")
+    cur.execute("SELECT who FROM who_commenting_on_more_than_10_bugs")
+
+    dev = []
+    for i in cur.fetchall():
+        dev.append(i[0])
 
     product_bug = {}
 
@@ -47,11 +52,13 @@ with db:
 
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
-            val = bug_who[i[0]]
-            val.add(i[1])
-            bug_who[i[0]] = val
+            if i[1] in dev:
+                val = bug_who[i[0]]
+                val.add(i[1])
+                bug_who[i[0]] = val
         else:
-            bug_who[i[0]] = {i[1]}
+            if i[1] in dev:
+                bug_who[i[0]] = {i[1]}
 
     print("Fetched!")
 

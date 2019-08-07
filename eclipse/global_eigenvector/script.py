@@ -4,6 +4,7 @@ import numpy as np
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
 INFLUENCE_MATRIX = "influence_matrix/definition_2/"
 ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
+TOTAL_WHO = 734
 
 
 def fetch_file(path):
@@ -44,7 +45,7 @@ for i in range(4):
     print(influence_matrix[i][2])
     print(influence_matrix[i][3])
 
-    for j in range(507):
+    for j in range(TOTAL_WHO):
         row = []
 
         row.extend(wa1[j])

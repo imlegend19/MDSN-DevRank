@@ -37,9 +37,9 @@ l2_d1_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d1_centrality.txt")
 l2_d2_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d2_centrality.txt")
 l3_centrality = fetch_file(RELATIVE_PATH + "layers/l3_centrality.txt")
 l4_centrality = fetch_file(RELATIVE_PATH + "layers/l4_centrality.txt")
-global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
+global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/"
                                                   "definition_1/global_ev_dict.txt")
-global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
+global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector/EigenVector/"
                                                   "definition_2/global_ev_dict.txt")
 avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
 reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")

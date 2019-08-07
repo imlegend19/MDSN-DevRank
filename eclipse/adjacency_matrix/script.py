@@ -3,7 +3,7 @@ import numpy as np
 
 from local_settings_eclipse import db
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/edges/definition_2/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/edges/definition_1/"
 TOTAL = 0
 relative_ids = {}
 
@@ -11,7 +11,8 @@ with db:
     cur = db.cursor()
     print("Fetching relative id's...")
     cur.execute(
-        "SELECT distinct who from test_longdescs_fixed_closed")
+        "SELECT who FROM who_commenting_on_more_than_10_bugs"
+        " WHERE who in (SELECT distinct who from test_longdescs_fixed_closed)")
 
     who_ids = []
     for i in cur.fetchall():
