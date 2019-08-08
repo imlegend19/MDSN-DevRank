@@ -91,40 +91,12 @@ cnt = 0
 for i in who:
     try:
         l1 = l1_centrality[i]
-    except Exception:
-        l1 = 0
-
-    try:
         l2_d1 = l2_d1_centrality[i]
-    except Exception:
-        l2_d1 = 0
-
-    try:
         l2_d2 = l2_d2_centrality[i]
-    except Exception:
-        l2_d2 = 0
-
-    try:
         l3 = l3_centrality[i]
-    except Exception:
-        l3 = 0
-
-    try:
         l4 = l4_centrality[i]
-    except Exception:
-        l4 = 0
-
-    try:
         gl_a = global_d1_centrality[i]
-    except Exception:
-        gl_a = 0
-
-    try:
         gl_b = global_d2_centrality[i]
-    except Exception:
-        gl_b = 0
-
-    try:
         avg = avg_fixed_time[i].days * 24 + avg_fixed_time[i].seconds / 3600
         rp = (reopened_percent[i][0] / reopened_percent[i][1]) * 100
         comp = assignee_comp[i]
@@ -138,6 +110,7 @@ for i in who:
         sheet.append(row)
     except Exception:
         cnt += 1
+        print(i)
         pass
 
 wb.save("correlation_eclipse_1.xlsx")
