@@ -79,18 +79,27 @@ def layer4(product_id):
             print("Setup succeeded!")
             print("Setting up dict for who_id's who have commented on same bug...")
 
+        cur.execute("select who from test_longdescs_fixed_closed "
+                    "group by who having count(distinct bug_id) > 10 and "
+                    "timestampdiff(year, min(bug_when), max(bug_when)) >= 2")
+
+        filtered_who = []
+        for i in cur.fetchall():
+            filtered_who.append(i[0])
+
         cur.execute("SELECT distinctrow bug_id, who FROM test_longdescs_fixed_closed")
         bug_who = {}
 
         for i in cur.fetchall():
-            if i[0] in bug_who.keys():
-                if i[1] in dev:
-                    val = bug_who[i[0]]
-                    val.add(i[1])
-                    bug_who[i[0]] = val
-            else:
-                if i[1] in dev:
-                    bug_who[i[0]] = {i[1]}
+            if i[1] in filtered_who:
+                if i[0] in bug_who.keys():
+                    if i[1] in dev:
+                        val = bug_who[i[0]]
+                        val.add(i[1])
+                        bug_who[i[0]] = val
+                else:
+                    if i[1] in dev:
+                        bug_who[i[0]] = {i[1]}
 
         if product_id is None:
             print("Fetched!")

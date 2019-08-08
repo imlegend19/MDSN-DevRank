@@ -76,129 +76,144 @@ def layer3(product_id):
         if product_id is None:
             print("Length comp_bug", len(comp_bug))
             print("Setup succeeded!")
+
+            cur.execute("select who from test_longdescs_fixed_closed "
+                        "group by who having count(distinct bug_id) > 10 and "
+                        "timestampdiff(year, min(bug_when), max(bug_when)) >= 2")
+
+            filtered_who = []
+            for i in cur.fetchall():
+                filtered_who.append(i[0])
+
             print("Setting up dict for who_id's who have commented on same bug...")
 
         cur.execute("SELECT distinctrow bug_id, who FROM test_longdescs_fixed_closed")
         bug_who = {}
 
+        bugs_taken = []
         for i in cur.fetchall():
-            if i[0] in bug_who.keys():
-                if i[1] in dev:
-                    val = bug_who[i[0]]
-                    val.add(i[1])
-                    bug_who[i[0]] = val
-            else:
-                if i[1] in dev:
-                    bug_who[i[0]] = {i[1]}
+            if i[1] in filtered_who:
+                if i[0] in bug_who.keys():
+                    if i[1] in dev:
+                        val = bug_who[i[0]]
+                        val.add(i[1])
+                        bug_who[i[0]] = val
+                else:
+                    if i[1] in dev:
+                        bug_who[i[0]] = {i[1]}
+                bugs_taken.append(i[0])
 
-        if product_id is None:
-            print("Fetched!")
-            print("Setting up component-bug-who dict...")
+        with open("bugs_taken4.txt", 'wb') as fp:
+            pickle.dump(bugs_taken, fp)
 
-        comp_bug_who = {}
-
-        for i in comp_bug:
-            val = comp_bug[i]
-            dic_val = []
-            for j in val:
-                try:
-                    who_lst = bug_who[j]
-                    for k in who_lst:
-                        dic_val.append((j, k))
-                except KeyError:
-                    pass
-            comp_bug_who[i] = dic_val
-
-        bug_who.clear()
-        comp_bug.clear()
-
-        cbw_length = {}
-        length = []
-
-        if product_id is None:
-            print("Calculating lengths...")
-
-        for i in comp_bug_who:
-            length.append(len(comp_bug_who[i]))
-            cbw_length[len(comp_bug_who[i])] = i
-
-        length.sort(reverse=True)
-        # del cbw_length[length.pop(0)]
-
-        edges = set()
-
-        if product_id is None:
-            print("Setting up edges_normal...")
-
-        start = datetime.now().now()
-
-        counter = 1
-        for _ in length:
-            i = cbw_length[_]
-            val = comp_bug_who[i]
-
-            if product_id is None:
-                print("Ongoing =", counter, "- Component =", i, "- Total Length =", _, "- Total Edges =",
-                      len(edges))
-
-            for j in val:
-                for k in val:
-                    if j[1] != k[1]:
-                        edges.add((j[1], k[1]))
-
-            counter += 1
-
-        end = datetime.now().time()
-
-        if product_id is None:
-            print("Start Time:", start, "End Time:", end)
-
-            print("Writing layer 3 edges_normal to text file...")
-            save_edges(edges)
-
-            print("Process Successful! Total Edges =", len(edges))
-
-        graph = nx.DiGraph()
-
-        try:
-            graph.add_edges_from(list(edges))
-
-            if product_id is None:
-                print("Total edges_normal =", len(edges))
-                print("Calculating eigenvector centrality...")
-
-            centrality = nx.eigenvector_centrality(graph)
-
-            ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
-            ec.reverse()
-
-            who_centrality = {}
-
-            for i in ec:
-                who_centrality[i[1]] = i[0]
-
-            with open("l3_centrality.txt", 'wb') as fp:
-                pickle.dump(who_centrality, fp)
-
-            if product_id is None:
-                save_ranks(ec)
-            else:
-                sum_ec = 0
-
-                for i in ec:
-                    sum_ec += float(i[0])
-
-                avg_centrality = sum_ec / len(ec)
-                # print(product_id, ' : ', avg_centrality)
-
-                return avg_centrality
-
-        except Exception as e:
-
-            print(e.args)
-            print("Process Unsuccessful!")
-
-            print("Filled", len(graph.edges.data()), "edges_normal out of", len(edges))
+        # if product_id is None:
+        #     print("Fetched!")
+        #     print("Setting up component-bug-who dict...")
+        #
+        # comp_bug_who = {}
+        #
+        # for i in comp_bug:
+        #     val = comp_bug[i]
+        #     dic_val = []
+        #     for j in val:
+        #         try:
+        #             who_lst = bug_who[j]
+        #             for k in who_lst:
+        #                 dic_val.append((j, k))
+        #         except KeyError:
+        #             pass
+        #     comp_bug_who[i] = dic_val
+        #
+        # bug_who.clear()
+        # comp_bug.clear()
+        #
+        # cbw_length = {}
+        # length = []
+        #
+        # if product_id is None:
+        #     print("Calculating lengths...")
+        #
+        # for i in comp_bug_who:
+        #     length.append(len(comp_bug_who[i]))
+        #     cbw_length[len(comp_bug_who[i])] = i
+        #
+        # length.sort(reverse=True)
+        # # del cbw_length[length.pop(0)]
+        #
+        # edges = set()
+        #
+        # if product_id is None:
+        #     print("Setting up edges_normal...")
+        #
+        # start = datetime.now().now()
+        #
+        # counter = 1
+        # for _ in length:
+        #     i = cbw_length[_]
+        #     val = comp_bug_who[i]
+        #
+        #     if product_id is None:
+        #         print("Ongoing =", counter, "- Component =", i, "- Total Length =", _, "- Total Edges =",
+        #               len(edges))
+        #
+        #     for j in val:
+        #         for k in val:
+        #             if j[1] != k[1]:
+        #                 edges.add((j[1], k[1]))
+        #
+        #     counter += 1
+        #
+        # end = datetime.now().time()
+        #
+        # if product_id is None:
+        #     print("Start Time:", start, "End Time:", end)
+        #
+        #     print("Writing layer 3 edges_normal to text file...")
+        #     save_edges(edges)
+        #
+        #     print("Process Successful! Total Edges =", len(edges))
+        #
+        # graph = nx.DiGraph()
+        #
+        # try:
+        #     graph.add_edges_from(list(edges))
+        #
+        #     if product_id is None:
+        #         print("Total edges_normal =", len(edges))
+        #         print("Calculating eigenvector centrality...")
+        #
+        #     centrality = nx.eigenvector_centrality(graph)
+        #
+        #     ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+        #     ec.reverse()
+        #
+        #     who_centrality = {}
+        #
+        #     for i in ec:
+        #         who_centrality[i[1]] = i[0]
+        #
+        #     with open("l3_centrality.txt", 'wb') as fp:
+        #         pickle.dump(who_centrality, fp)
+        #
+        #     if product_id is None:
+        #         save_ranks(ec)
+        #     else:
+        #         sum_ec = 0
+        #
+        #         for i in ec:
+        #             sum_ec += float(i[0])
+        #
+        #         avg_centrality = sum_ec / len(ec)
+        #         # print(product_id, ' : ', avg_centrality)
+        #
+        #         return avg_centrality
+        #
+        # except Exception as e:
+        #
+        #     print(e.args)
+        #     print("Process Unsuccessful!")
+        #
+        #     print("Filled", len(graph.edges.data()), "edges_normal out of", len(edges))
 
 
 layer3(None)
