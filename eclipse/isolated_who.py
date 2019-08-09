@@ -35,11 +35,20 @@ l4 = get_layer_who(fetch_file(RELATIVE_PATH + 'layer4_edges_fc.txt'))
 
 with db:
     cur = db.cursor()
-    cur.execute("SELECT DISTINCT who, COUNT(DISTINCT bug_id) FROM test_longdescs_fixed_closed GROUP BY who")
+    cur.execute("SELECT DISTINCT who FROM test_longdescs_fixed_closed GROUP BY who")
+
+    w = []
+    for i in cur.fetchall():
+        w.append(i[0])
+
+    cur.execute('SELECT DISTINCT who, COUNT(DISTINCT bug_id) FROM longdescs GROUP BY who')
+    dev = {}
+    for i in cur.fetchall():
+        dev[i[0]] = i[1]
 
     who = {}
-    for i in cur.fetchall():
-        who[i[0]] = i[1]
+    for i in w:
+        who[i] = dev[i]
 
 iso_l1 = get_isolated_who(l1, who.keys())
 iso_l2 = get_isolated_who(l2, who.keys())

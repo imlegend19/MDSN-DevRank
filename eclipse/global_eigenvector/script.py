@@ -4,7 +4,7 @@ import numpy as np
 RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
 INFLUENCE_MATRIX = "influence_matrix/definition_2/"
 ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
-TOTAL_WHO = 146
+TOTAL_WHO = 1534
 
 
 def fetch_file(path):

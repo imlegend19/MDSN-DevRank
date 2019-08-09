@@ -10,9 +10,7 @@ relative_ids = {}
 with db:
     cur = db.cursor()
     print("Fetching relative id's...")
-    cur.execute("select who from test_longdescs_fixed_closed "
-                "group by who having count(distinct bug_id) > 10 and "
-                "timestampdiff(year, min(bug_when), max(bug_when)) >= 2")
+    cur.execute("select distinct who from test_longdescs_fixed_closed")
 
     who_ids = []
     for i in cur.fetchall():
