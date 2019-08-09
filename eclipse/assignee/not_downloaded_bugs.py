@@ -6,9 +6,16 @@ with open("not_downloaded_bugs.txt", 'rb') as fp:
 
 url = "https://bugs.eclipse.org/bugs/show_activity.cgi?id="
 
+nd = []
+
 cnt = len(list_bugs)
 for i in list_bugs:
     print("Remaining", cnt)
 
-    request.urlretrieve(url + str(i), "bug_html/" + str(i) + ".html")
-    cnt -= 1
+    try:
+        request.urlretrieve(url + str(i), "bug_html/" + str(i) + ".html")
+        cnt -= 1
+    except Exception:
+        nd.append(i)
+
+print(nd)
