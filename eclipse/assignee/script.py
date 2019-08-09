@@ -61,9 +61,6 @@ with db:
         except Exception:
             ndbugs.append(i)
 
-    with open('not_downloaded_bugs.txt', 'wb') as fp:
-        pickle.dump(ndbugs, fp)
-
         # print(headings)
 
         data = []
@@ -185,6 +182,9 @@ with db:
             assignee_first_fixed_time[assignee] = [finished_time - assigned_time, 1]
 
     print("Saving...")
+
+    print(len(ndbugs))
+
     with open('assignee_fixed_time.txt', 'wb') as fp:
         pickle.dump(assignee_fixed_time, fp)
 

@@ -58,9 +58,7 @@ def layer1(product_id):
         if product_id is None:
             print("Setting up dict for who_id's who have commented on same bug...")
 
-        cur.execute("select who from test_longdescs_fixed_closed "
-                    "group by who having count(distinct bug_id) > 10 and "
-                    "timestampdiff(year, min(bug_when), max(bug_when)) >= 2")
+        cur.execute("select distinct who from test_longdescs_fixed_closed")
 
         filtered_who = []
         for i in cur.fetchall():
@@ -87,54 +85,54 @@ def layer1(product_id):
         with open("bugs_taken.txt", 'wb') as fp:
             pickle.dump(bugs_taken, fp)
 
-        # print("Fetching bugs from test_bug...")
-        # cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
-        #
-        # bugs = []
-        # for i in cur.fetchall():
-        #     bugs.append(i[0])
-        #
-        # print("Fetched!")
-        # print("Updating bug_who...")
-        #
-        # for i in list(bug_who.keys()):
-        #     if i not in bugs:
-        #         del bug_who[i]
-        #
-        # print("Setting up edges_normal...")
-        #
-        # edges = set()
-        # for i in bug_who.values():
-        #     if len(list(i)) > 1:
-        #         edg = list(permutations(list(i), 2))
-        #         for j in edg:
-        #             if j[0] == j[1]:
-        #                 print('err')
-        #             edges.add(j)
-        #
-        # save_edges(edges)
-        # print("Saved edges_normal! Total edges_normal:", len(edges))
-        #
-        # graph = nx.DiGraph()
-        # graph.add_edges_from(list(edges))
-        #
-        # print("Calculating eigenvector centrality...")
-        # centrality = nx.eigenvector_centrality(graph)
-        #
-        # ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
-        # ec.reverse()
-        #
-        # who_centrality = {}
-        #
-        # for i in ec:
-        #     who_centrality[i[1]] = i[0]
-        #
-        # with open("l1_centrality.txt", 'wb') as fp:
-        #     pickle.dump(who_centrality, fp)
-        #
-        # save_ranks(ec)
-        #
-        # print("Process Competed!")
+        print("Fetching bugs from test_bug...")
+        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
+
+        bugs = []
+        for i in cur.fetchall():
+            bugs.append(i[0])
+
+        print("Fetched!")
+        print("Updating bug_who...")
+
+        for i in list(bug_who.keys()):
+            if i not in bugs:
+                del bug_who[i]
+
+        print("Setting up edges_normal...")
+
+        edges = set()
+        for i in bug_who.values():
+            if len(list(i)) > 1:
+                edg = list(permutations(list(i), 2))
+                for j in edg:
+                    if j[0] == j[1]:
+                        print('err')
+                    edges.add(j)
+
+        save_edges(edges)
+        print("Saved edges_normal! Total edges_normal:", len(edges))
+
+        graph = nx.DiGraph()
+        graph.add_edges_from(list(edges))
+
+        print("Calculating eigenvector centrality...")
+        centrality = nx.eigenvector_centrality(graph)
+
+        ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+        ec.reverse()
+
+        who_centrality = {}
+
+        for i in ec:
+            who_centrality[i[1]] = i[0]
+
+        with open("l1_centrality.txt", 'wb') as fp:
+            pickle.dump(who_centrality, fp)
+
+        save_ranks(ec)
+
+        print("Process Competed!")
 
 
 layer1(None)
