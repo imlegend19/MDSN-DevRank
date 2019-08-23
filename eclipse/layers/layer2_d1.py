@@ -9,7 +9,7 @@ from local_settings_eclipse import db
 """
 Layer 2 Network: 
 
-Edge between developers who commented on 2 same bugs which belong to same product.
+Edge between developers who commented on 2 bugs which belong to same product.
 
 Dataset Used : eclipse
 Table : test_bugs_fixed_closed, test_longdescs_fixed_closed
