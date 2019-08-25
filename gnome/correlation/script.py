@@ -16,11 +16,69 @@ wb = openpyxl.Workbook()
 sheet = wb.active
 
 titles = ["Assignee Id", "L1 Centrality", "L2-A Centrality", "L2-B Centrality", "L3 Centrality",
-          "Global Centrality A", "Global Centrality B", "Avg Fixed Time", "Reopened Percent",
+          "Avg Fixed Time", "Reopened Percent",
           "Assignee Component", "Total Bugs", "Average First Closed Time", "Priority", "Severity"]
 
 sheet.append(titles)
 sheet.append(["" for i in range(len(titles))])
+
+def get_priority_points(priority):
+    """
+    Normal
+    High
+    Urgent
+    Low
+    Immediate
+
+    :param priority:
+    :return: aggregate priority points
+    """
+    points = 0
+    for i in priority:
+        if i == 'Low':
+            points += priority[i]
+        elif i == 'Normal':
+            points += priority[i] * 2
+        elif i == 'High':
+            points += priority[i] * 3
+        elif i == 'Urgent':
+            points += priority[i] * 4
+        else:
+            points += priority[i] * 5
+
+    return points
+
+
+def get_severity_points(severity):
+    """
+    normal
+    critical
+    major
+    trivial
+    enhancement
+    minor
+    blocker
+
+    :param severity:
+    :return:
+    """
+    points = 0
+    for i in severity:
+        if i == 'normal':
+            points += severity[i] * 3
+        elif i == 'critical':
+            points += severity[i] * 5
+        elif i == 'major':
+            points += severity[i] * 4
+        elif i == 'trivial':
+            points += severity[i] * 1
+        elif i == 'minor':
+            points += severity[i] * 2
+        elif i == 'blocker':
+            points += severity[i] * 6
+
+    return points
+
 
 who_assignee = {v: k for k, v in fetch_file(RELATIVE_PATH + "assignee/assignee_who.txt").items()}
 
@@ -32,10 +90,6 @@ l1_centrality = fetch_file(RELATIVE_PATH + "layers/l1_centrality.txt")
 l2_d1_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d1_centrality.txt")
 l2_d2_centrality = fetch_file(RELATIVE_PATH + "layers/l2_d2_centrality.txt")
 l3_centrality = fetch_file(RELATIVE_PATH + "layers/l3_centrality.txt")
-global_d1_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
-                                                  "definition_1/global_ev_dict.txt")
-global_d2_centrality = fetch_file(RELATIVE_PATH + "global_eigenvector_normal/EigenVector/"
-                                                  "definition_1/global_ev_dict.txt")
 avg_fixed_time = fetch_file(RELATIVE_PATH + "assignee/assignee_avg_fixed_time.txt")
 reopened_percent = fetch_file(RELATIVE_PATH + "assignee/assignee_reopened.txt")
 assignee_comp = fetch_file(RELATIVE_PATH + "assignee/assignee_component.txt")
@@ -96,6 +150,7 @@ def get_severity_points(severity):
     return points
 
 
+cnt = 0
 for i in who:
     w_a = who_assignee[i]
 
@@ -104,9 +159,6 @@ for i in who:
         l2_d1 = l2_d1_centrality[i]
         l2_d2 = l2_d2_centrality[i]
         l3 = l3_centrality[i]
-        gl_a = global_d1_centrality[i]
-        gl_b = global_d2_centrality[i]
-
         avg = avg_fixed_time[i].days * 24 + avg_fixed_time[i].seconds / 3600
         rp = reopened_percent[i]
         comp = assignee_comp[i]
@@ -115,11 +167,13 @@ for i in who:
         pri = get_priority_points(priority[i])
         sev = get_severity_points(severity[i])
 
-        row = [i, l1, l2_d1, l2_d2, l3, gl_a, gl_b, avg, rp, comp, bugs, avg_ft, pri, sev]
+        row = [i, l1, l2_d1, l2_d2, l3, avg, rp, comp, bugs, avg_ft, pri, sev]
 
         sheet.append(row)
     except Exception:
+        cnt += 1
         pass
 
+print("Error count", cnt)
 wb.save("correlation_gnome_1.xlsx")
 print("Finished!")

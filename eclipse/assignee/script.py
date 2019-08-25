@@ -30,14 +30,10 @@ with db:
 
     # url = "https://bugs.eclipse.org/bugs/show_activity.cgi?id="
 
-    with open('bugs.txt', 'rb') as fp:
-        samp = pickle.load(fp)
-
     bugs = set()
     for i in assignee_bug.values():
         for j in i:
-            if j in samp:
-                bugs.add(j)
+            bugs.add(j)
 
     assignee_fixed_time = {}
     assignee_reopened_cnt = {}

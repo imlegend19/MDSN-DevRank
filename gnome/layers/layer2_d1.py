@@ -1,6 +1,5 @@
 import pickle
-from datetime import datetime
-
+from itertools import permutations
 import networkx as nx
 import openpyxl
 from local_settings_gnome import db
@@ -8,7 +7,7 @@ from local_settings_gnome import db
 """
 Layer 2 Network: 
 
-Edge between developers who commented on 2 different bugs which belong to same product.
+Edge between developers who commented on 2 bugs which belong to same product.
 
 Dataset Used : gnomebug
 Table : bug
@@ -49,7 +48,6 @@ with db:
 
     cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
     bug_who = {}
-
     for i in cur.fetchall():
         if i[0] in bug_who.keys():
             if i[1] in dev:
@@ -61,67 +59,30 @@ with db:
                 bug_who[i[0]] = {i[1]}
 
     print("Fetched!")
-
-    prod_bug_who = {}
-
-    print("Setting up product-bug-who dict...")
+    product_who = {}
     for i in product_bug:
         val = product_bug[i]
-        dic_val = []
+        who_s = set()
         for j in val:
             try:
-                who_lst = bug_who[j]
-                for k in who_lst:
-                    dic_val.append((j, k))
+                for k in bug_who[j]:
+                    who_s.add(k)
             except KeyError:
                 pass
-        prod_bug_who[i] = dic_val
 
-    print("Clearing variables...")
-
-    bug_who.clear()
-    product_bug.clear()
-
-    pbw_length = {}
-    length = []
-
-    print("Calculating lengths...")
-    for i in prod_bug_who:
-        length.append(len(prod_bug_who[i]))
-        pbw_length[len(prod_bug_who[i])] = i
-
-    length.sort(reverse=True)
-    # del pbw_length[length.pop(0)]
-
-    print(length)
-
-    edges = set()
+        product_who[i] = who_s
 
     print("Setting up edges_normal...")
-
-    start = datetime.now().now()
-
-    counter = 1
-    for _ in length:
-        i = pbw_length[_]
-        val = prod_bug_who[i]
-
-        print("Ongoing =", counter, "- Product =", i, "- Total Length =", _, "- Total Edges =",
-              len(edges))
-
-        for j in val:
-            for k in val:
-                if j[0] != k[0]:
-                    edges.add((j[1], k[1]))
-
-        counter += 1
-
-    end = datetime.now().time()
-
-    print("Start Time:", start, "End Time:", end)
+    edges = set()
+    for i in product_who.values():
+        if len(list(i)) > 1:
+            edg = list(permutations(list(i), 2))
+            for j in edg:
+                if j[0] == j[1]:
+                    print('err')
+                edges.add(j)
 
     print("Writing layer 2 edges_normal to text file...")
-
     with open('layer2_edges_fc.txt', 'wb') as file:
         pickle.dump(edges, file)
 

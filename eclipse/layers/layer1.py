@@ -53,8 +53,6 @@ def layer1(product_id):
         for i in cur.fetchall():
             dev.append(i[0])
 
-        bug_who = {}
-
         if product_id is None:
             print("Setting up dict for who_id's who have commented on same bug...")
 
@@ -65,10 +63,7 @@ def layer1(product_id):
             filtered_who.append(i[0])
 
         cur.execute("SELECT distinctrow bug_id, who from test_longdescs_fixed_closed")
-
-        # FMT = '%H:%M:%S'
-        # start = datetime.now().time()
-
+        bug_who = {}
         bugs_taken = []
         for i in cur.fetchall():
             if i[1] in filtered_who:

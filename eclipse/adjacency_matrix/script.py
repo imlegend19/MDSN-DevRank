@@ -1,9 +1,8 @@
 import pickle
-import numpy as np
 
 from local_settings_eclipse import db
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/edges/definition_2/"
+RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/edges/definition_1/"
 TOTAL = 0
 relative_ids = {}
 

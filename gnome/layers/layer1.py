@@ -93,7 +93,7 @@ def layer1(product_id):
                 del bug_who[i]
 
         if product_id is None:
-            print("Setting up edges_normal...")
+            print("Setting up edges...")
 
         edges = set()
         for i in bug_who.values():
@@ -102,9 +102,9 @@ def layer1(product_id):
                 for j in edg:
                     edges.add(j)
 
-        # if product_id is None:
-        #     save_edges(edges_normal)
-        #     print("Saved edges_normal! Total edges_normal:", len(edges_normal))
+        if product_id is None:
+            save_edges(edges)
+            print("Saved edges_normal! Total edges_normal:", len(edges))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))
@@ -132,7 +132,7 @@ def layer1(product_id):
             for i in cur.fetchall():
                 developer[i[0]] = i[1]
 
-            # save_ranks(developer, ec)
+            save_ranks(developer, ec)
         else:
             sum_ec = 0
 

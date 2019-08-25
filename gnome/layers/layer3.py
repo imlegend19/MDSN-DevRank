@@ -1,5 +1,6 @@
 import pickle
 from datetime import datetime
+from itertools import permutations
 
 import networkx as nx
 import openpyxl
@@ -8,7 +9,7 @@ from local_settings_gnome import db
 """
 Layer 3 Network: 
 
-Edge between developers who commented on 2 different bugs reported by same reporter.
+Edge between developers who commented on 2 bugs reported by same reporter.
 
 Dataset Used : gnomebug
 Table : bug
@@ -58,9 +59,9 @@ def layer3(product_id):
         if product_id is None:
             print("Fetching and setting up dict...")
 
-            cur.execute("select distinctrow bug_id, component from test_bug_fixed_closed")
+            cur.execute("select distinctrow bug_id, reporter from test_bug_fixed_closed")
         else:
-            cur.execute("select distinctrow bug_id, component from test_bug_fixed_closed where product_id="
+            cur.execute("select distinctrow bug_id, reporter from test_bug_fixed_closed where product_id="
                         + str(product_id))
 
         comp_bug = {}
@@ -96,21 +97,17 @@ def layer3(product_id):
             print("Setting up component-bug-who dict...")
 
         comp_bug_who = {}
-
         for i in comp_bug:
             val = comp_bug[i]
-            dic_val = []
+            who_s = set()
             for j in val:
                 try:
                     who_lst = bug_who[j]
                     for k in who_lst:
-                        dic_val.append((j, k))
+                        who_s.add(k)
                 except KeyError:
                     pass
-            comp_bug_who[i] = dic_val
-
-        bug_who.clear()
-        comp_bug.clear()
+            comp_bug_who[i] = who_s
 
         cbw_length = {}
         length = []
@@ -118,41 +115,19 @@ def layer3(product_id):
         if product_id is None:
             print("Calculating lengths...")
 
-        for i in comp_bug_who:
-            length.append(len(comp_bug_who[i]))
-            cbw_length[len(comp_bug_who[i])] = i
-
-        length.sort(reverse=True)
-        # del cbw_length[length.pop(0)]
-
         edges = set()
 
-        if product_id is None:
-            print("Setting up edges_normal...")
-
-        start = datetime.now().now()
-
-        counter = 1
-        for _ in length:
-            i = cbw_length[_]
-            val = comp_bug_who[i]
-
-            if product_id is None:
-                print("Ongoing =", counter, "- Component =", i, "- Total Length =", _, "- Total Edges =",
-                      len(edges))
-
-            for j in val:
-                for k in val:
-                    if j[0] != k[0]:
-                        edges.add((j[1], k[1]))
-
-            counter += 1
-
-        end = datetime.now().time()
+        print("Setting up edges_normal...")
+        edges = set()
+        for i in comp_bug_who.values():
+            if len(list(i)) > 1:
+                edg = list(permutations(list(i), 2))
+                for j in edg:
+                    if j[0] == j[1]:
+                        print('err')
+                    edges.add(j)
 
         if product_id is None:
-            print("Start Time:", start, "End Time:", end)
-
             print("Writing layer 3 edges_normal to text file...")
             save_edges(edges)
 

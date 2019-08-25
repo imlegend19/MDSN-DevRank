@@ -26,7 +26,7 @@ sheet.append(["" for i in range(len(titles))])
 with db:
     cur = db.cursor()
     cur.execute("select assigned_to, count(distinct bug_id) from "
-                "test_bugs_fixed_closed group by assigned_to having count(distinct bug_id) > 20")
+                "test_bugs_fixed_closed group by assigned_to having count(distinct bug_id) > 15")
 
 who = []
 for i in cur.fetchall():
@@ -113,6 +113,6 @@ for i in who:
         print(i)
         pass
 
-wb.save("correlation_eclipse_1_20.xlsx")
+wb.save("correlation_eclipse_1_15.xlsx")
 print("Finished!")
 print("Error count:", cnt)

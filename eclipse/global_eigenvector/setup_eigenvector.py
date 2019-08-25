@@ -3,7 +3,7 @@ import pickle
 url = '/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/global_eigenvector/EigenVector/' \
       'definition_2/global_eigenvector_fc.txt'
 
-TOTAL_WHO = 1534
+TOTAL_WHO = 1161
 
 with open(url, 'rb') as fp:
     ge = pickle.load(fp)

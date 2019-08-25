@@ -61,72 +61,77 @@ with db:
 
     print(len(assignee_bug))
 
-    url = "https://bugzilla.gnome.org/show_activity.cgi?id="
-
-    cnt = 0
-
-    for i in assignee_bug.values():
-        cnt += len(i)
-
-    assignee_reopened_cnt = {}
-
-    for i in assignee_bug.values():
-        for j in i:
-            print("Ongoing", j)
-
-            with open('bug_html/' + str(j) + '.html', 'rb') as fp:
-                html = fp.read()
-
-            soup = BeautifulSoup(html, features="html.parser")
-
-            div = soup.find("div", attrs={"id": "bugzilla-body"})
-            table = div.find("table")
-
-            headings = [th.get_text() for th in table.find("tr").find_all("th")]
-
-            # print(headings)
-
-            data = []
-            for row in table.find_all("tr")[1:]:
-                dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
-                data.append(dataset)
-
-            assignee = list(assignee_bug.keys())[list(assignee_bug.values()).index(i)]
-
-            for k in data:
-                if 'REOPENED' in k:
-                    if segregated_assignees[assignee] in assignee_reopened_cnt:
-                        reopened = assignee_reopened_cnt[segregated_assignees[assignee]][0]
-                        tot = assignee_reopened_cnt[segregated_assignees[assignee]][1]
-                        assignee_reopened_cnt[segregated_assignees[assignee]] = [reopened + 1, tot + 1]
-                    else:
-                        assignee_reopened_cnt[segregated_assignees[assignee]] = [1, 1]
-                else:
-                    if segregated_assignees[assignee] in assignee_reopened_cnt:
-                        reopened = assignee_reopened_cnt[segregated_assignees[assignee]][0]
-                        tot = assignee_reopened_cnt[segregated_assignees[assignee]][1]
-                        assignee_reopened_cnt[segregated_assignees[assignee]] = [reopened, tot + 1]
-                    else:
-                        assignee_reopened_cnt[segregated_assignees[assignee]] = [0, 1]
-
-    assignee_reopened_percent = {}
-
-    print("Setting up percent dict...")
-    mx = [0, 0]
-    for i in assignee_reopened_cnt:
-        percent = (assignee_reopened_cnt[i][0] / assignee_reopened_cnt[i][1]) * 100
-        assignee_reopened_percent[i] = percent
-
-        if percent > mx[1]:
-            mx = [i, percent]
-
-    print(assignee_reopened_percent)
-    print(mx)
-
-    with open("assignee_reopened.txt", 'wb') as fp:
-        pickle.dump(assignee_reopened_percent, fp)
-
-    print("Finished!")
+    # url = "https://bugzilla.gnome.org/show_activity.cgi?id="
+    #
+    # cnt = 0
+    #
+    # for i in assignee_bug.values():
+    #     cnt += len(i)
+    #
+    # assignee_reopened_cnt = {}
+    # ndbugs = set()
+    # for i in assignee_bug.values():
+    #     for j in i:
+    #         try:
+    #             print("Ongoing", j)
+    #             with open('bug_html/' + str(j) + '.html', 'rb') as fp:
+    #                 html = fp.read()
+    #
+    #             soup = BeautifulSoup(html, features="html.parser")
+    #
+    #             div = soup.find("div", attrs={"id": "bugzilla-body"})
+    #             table = div.find("table")
+    #
+    #             headings = [th.get_text() for th in table.find("tr").find_all("th")]
+    #
+    #             # print(headings)
+    #
+    #             data = []
+    #             for row in table.find_all("tr")[1:]:
+    #                 dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
+    #                 data.append(dataset)
+    #
+    #             assignee = list(assignee_bug.keys())[list(assignee_bug.values()).index(i)]
+    #
+    #             for k in data:
+    #                 if 'REOPENED' in k:
+    #                     if segregated_assignees[assignee] in assignee_reopened_cnt:
+    #                         reopened = assignee_reopened_cnt[segregated_assignees[assignee]][0]
+    #                         tot = assignee_reopened_cnt[segregated_assignees[assignee]][1]
+    #                         assignee_reopened_cnt[segregated_assignees[assignee]] = [reopened + 1, tot + 1]
+    #                     else:
+    #                         assignee_reopened_cnt[segregated_assignees[assignee]] = [1, 1]
+    #                 else:
+    #                     if segregated_assignees[assignee] in assignee_reopened_cnt:
+    #                         reopened = assignee_reopened_cnt[segregated_assignees[assignee]][0]
+    #                         tot = assignee_reopened_cnt[segregated_assignees[assignee]][1]
+    #                         assignee_reopened_cnt[segregated_assignees[assignee]] = [reopened, tot + 1]
+    #                     else:
+    #                         assignee_reopened_cnt[segregated_assignees[assignee]] = [0, 1]
+    #         except Exception:
+    #             ndbugs.add(j)
+    #
+    # with open('ndbugs.txt', 'wb') as fp:
+    #     pickle.dump(ndbugs, fp)
+    #
+    # assignee_reopened_percent = {}
+    #
+    # print("Setting up percent dict...")
+    # mx = [0, 0]
+    # for i in assignee_reopened_cnt:
+    #     percent = (assignee_reopened_cnt[i][0] / assignee_reopened_cnt[i][1]) * 100
+    #     assignee_reopened_percent[i] = percent
+    #
+    #     if percent > mx[1]:
+    #         mx = [i, percent]
+    #
+    # print(assignee_reopened_percent)
+    # print(mx)
+    #
+    # with open("assignee_reopened.txt", 'wb') as fp:
+    #     pickle.dump(assignee_reopened_percent, fp)
+    #
+    # print("Finished!")
 
 
 def calculate():
@@ -137,7 +142,7 @@ def calculate():
         for j in i:
 
             # print("Remaining", cnt)
-            request.urlretrieve(url + str(j), "bug_html/" + str(j) + ".html")
+            # request.urlretrieve(url + str(j), "bug_html/" + str(j) + ".html")
 
             # cnt -= 1
             # print("Ongoing", j)
@@ -161,9 +166,6 @@ def calculate():
             print(data)
 
             assignee_pet_name.append(data[0][0])
-
-            with open('bug_table' + str(j) + '.txt', 'wb') as fp:
-                pickle.dump(data, fp)
 
             assigned_time = parser.parse(data[0][1])
 
@@ -191,5 +193,8 @@ def calculate():
             else:
                 assignee_fixed_time[assignee] = [finished_time - assigned_time, 1]
 
-    # with open('assignee_fixed_time.txt', 'wb') as fp:
-    #     pickle.dump(assignee_fixed_time, fp)
+    with open('assignee_fixed_time.txt', 'wb') as fp:
+        pickle.dump(assignee_fixed_time, fp)
+
+
+calculate()

@@ -1,5 +1,6 @@
 import pickle
 from datetime import datetime
+from itertools import permutations
 
 import networkx as nx
 import openpyxl
@@ -8,7 +9,7 @@ from local_settings_gnome import db
 """ 
 Layer 4 Network: 
 
-Edge between developers who commented on 2 different bugs which belong to same operating system.
+Edge between developers who commented on 2 bugs which belong to same operating system.
 
 Dataset Used : gnomebug
 Table : bug
@@ -62,7 +63,6 @@ def layer4(product_id):
                         + str(product_id))
 
         os_bug = {}
-
         if product_id is None:
             print("Fetching and setting up dict...")
 
@@ -80,7 +80,6 @@ def layer4(product_id):
 
         cur.execute("SELECT distinctrow bug_id, who_id FROM test_comment_fixed_closed")
         bug_who = {}
-
         for i in cur.fetchall():
             if i[0] in bug_who.keys():
                 if i[1] in dev:
@@ -96,21 +95,17 @@ def layer4(product_id):
             print("Setting up os-bug-who dict...")
 
         os_bug_who = {}
-
         for i in os_bug:
             val = os_bug[i]
-            dic_val = []
+            who_s = set()
             for j in val:
                 try:
                     who_lst = bug_who[j]
                     for k in who_lst:
-                        dic_val.append((j, k))
+                        who_s.add(k)
                 except KeyError:
                     pass
-            os_bug_who[i] = dic_val
-
-        bug_who.clear()
-        os_bug.clear()
+            os_bug_who[i] = who_s
 
         obw_length = {}
         length = []
@@ -118,40 +113,19 @@ def layer4(product_id):
         if product_id is None:
             print("Calculating lengths...")
 
-        for i in os_bug_who:
-            length.append(len(os_bug_who[i]))
-            obw_length[len(os_bug_who[i])] = i
-
-        length.sort(reverse=True)
-        # del cbw_length[length.pop(0)]
-
-        edges = set()
-
         if product_id is None:
             print("Setting up edges_normal...")
-
-        start = datetime.now().now()
-
-        counter = 1
-        for _ in length:
-            i = obw_length[_]
-            val = os_bug_who[i]
-
-            if product_id is None:
-                print("Ongoing =", counter, "- OS =", i, "- Total Length =", _, "- Total Edges =",
-                      len(edges))
-
-            for j in val:
-                for k in val:
-                    if j[0] != k[0]:
-                        edges.add((j[1], k[1]))
-
-            counter += 1
-
-        end = datetime.now().time()
+            print("Setting up edges_normal...")
+            edges = set()
+            for i in os_bug_who.values():
+                if len(list(i)) > 1:
+                    edg = list(permutations(list(i), 2))
+                    for j in edg:
+                        if j[0] == j[1]:
+                            print('err')
+                        edges.add(j)
 
         if product_id is None:
-            print("Start Time:", start, "End Time:", end)
             print("Writing layer 4 edges_normal to text file...")
 
         if product_id is None:

@@ -1,5 +1,4 @@
 import pickle
-from datetime import datetime
 from itertools import permutations
 
 import networkx as nx
@@ -32,45 +31,44 @@ with db:
     for i in cur.fetchall():
         filtered_who.append(i[0])
 
-    cur.execute("SELECT distinctrow product_id, who from test_longdescs_fixed_closed")
+    cur.execute("SELECT distinctrow product_id, bug_id from test_bugs_fixed_closed")
 
-    # FMT = '%H:%M:%S'
-    # start = datetime.now().time()
+    product_bug = {}
+    for i in cur.fetchall():
+        if i[0] in product_bug.keys():
+            val = product_bug[i[0]]
+            val.add(i[1])
+            product_bug[i[0]] = val
+        else:
+            product_bug[i[0]] = {i[1]}
 
-    product_who = {}
-    bugs_taken = []
+    cur.execute("SELECT distinctrow bug_id, who from test_longdescs_fixed_closed")
+    bug_who = {}
     for i in cur.fetchall():
         if i[1] in filtered_who:
-            if i[0] in product_who.keys():
+            if i[0] in bug_who.keys():
                 if i[1] in dev:
-                    val = product_who[i[0]]
+                    val = bug_who[i[0]]
                     val.add(i[1])
-                    product_who[i[0]] = val
+                    bug_who[i[0]] = val
             else:
                 if i[1] in dev:
-                    product_who[i[0]] = {i[1]}
-            bugs_taken.append(i[0])
+                    bug_who[i[0]] = {i[1]}
 
-    with open("bugs_taken.txt", 'wb') as fp:
-        pickle.dump(bugs_taken, fp)
+    product_who = {}
+    for i in product_bug:
+        val = product_bug[i]
+        who_s = set()
+        for j in val:
+            try:
+                for k in bug_who[j]:
+                    who_s.add(k)
+            except KeyError:
+                pass
 
-    print("Fetching bugs from test_bug...")
-    cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
-
-    bugs = []
-    for i in cur.fetchall():
-        bugs.append(i[0])
-
-    print("Fetched!")
-    print("Updating bug_who...")
-
-    for i in list(product_who.keys()):
-        if i not in bugs:
-            print("#############", i)
-            del product_who[i]
+        product_who[i] = who_s
 
     print("Setting up edges_normal...")
-
     edges = set()
     for i in product_who.values():
         if len(list(i)) > 1:
@@ -99,7 +97,7 @@ with db:
     for i in ec:
         who_centrality[i[1]] = i[0]
 
-    with open("l2_centrality.txt", 'wb') as fp:
+    with open("l2_d1_centrality.txt", 'wb') as fp:
         pickle.dump(who_centrality, fp)
 
     print("Setting up excel sheet...")
