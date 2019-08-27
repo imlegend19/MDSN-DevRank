@@ -30,3 +30,22 @@ with db:
         pickle.dump(assignee_severity_cnt, fp)
 
     print("Process Finished!")
+
+
+def get_severity_points(severity):
+    points = 0
+    for i in severity:
+        if i == 'normal':
+            points += severity[i] * 3
+        elif i == 'critical':
+            points += severity[i] * 5
+        elif i == 'major':
+            points += severity[i] * 4
+        elif i == 'trivial':
+            points += severity[i] * 1
+        elif i == 'minor':
+            points += severity[i] * 2
+        elif i == 'blocker':
+            points += severity[i] * 6
+
+    return points

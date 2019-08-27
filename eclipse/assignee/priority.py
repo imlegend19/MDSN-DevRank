@@ -31,3 +31,21 @@ with db:
         pickle.dump(assignee_priority_cnt, fp)
 
     print("Process Finished!")
+
+
+def get_priority_points(priority):
+    points = 0
+    for i in priority:
+        if i == 'P1':
+            points += priority[i]
+        elif i == 'P2':
+            points += priority[i] * 2
+        elif i == 'P3':
+            points += priority[i] * 3
+        elif i == 'P4':
+            points += priority[i] * 4
+        else:
+            points += priority[i] * 5
+
+    return points
+
