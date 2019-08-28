@@ -6,6 +6,9 @@ from dateutil import parser
 
 from local_settings_eclipse import db
 
+# [13, 18, 35, 39, 47, 51, 53, 54, 238, 481, 2169, 2206, 2210, 2212, 2213, 2214, 2215, 2217, 2219, 2220, 2224, 2225,
+# 2227, 2228, 2231, 4861, 5892, 7084, 7311, 8707, 11674, 12825, 12828, 17212, 21408, 60037, 66801]
+
 with db:
     cur = db.cursor()
     cur.execute("select * from all_year_assignee")
@@ -14,103 +17,83 @@ with db:
     for i in cur.fetchall():
         assignee.append(i[0])
 
+    print(assignee)
+
+assignee_names = {}
+
 
 def calculate_avg_fixed_time(start, end):
-    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between " + str(start) + " and " + str(end))
+    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between "
+                + str(start) + " and " + str(end))
 
     assignee_bug = {}
-    for i in cur.fetchall():
-        if i[1] in assignee:
-            if i[1] in assignee_bug:
-                lst = set(assignee_bug[i[1]])
-                lst.add(i[0])
-                assignee_bug[i[1]] = list(lst)
+    for b in cur.fetchall():
+        if b[1] in assignee:
+            if b[1] in assignee_bug:
+                lst = set(assignee_bug[b[1]])
+                lst.add(b[0])
+                assignee_bug[b[1]] = list(lst)
             else:
-                assignee_bug[i[1]] = [i[0]]
+                assignee_bug[b[1]] = [b[0]]
 
     bugs = set()
-    for i in assignee_bug.values():
-        for j in i:
+    for b in assignee_bug.values():
+        for j in b:
             bugs.add(j)
+
+    print(len(bugs))
 
     assignee_fixed_time = {}
     main_cnt = len(bugs)
-
-    for i in bugs:
-        print("Ongoing bug:", i, "Remaining :", main_cnt)
+    for b in bugs:
+        print("Ongoing bug:", b, "Remaining :", main_cnt)
         main_cnt -= 1
-        try:
-            with open('bug_html/' + str(i) + '.html', 'r') as fp:
-                html = fp.read()
 
-            soup = BeautifulSoup(html, features="html.parser")
+        for j in assignee_bug:
+            ass_bugs = assignee_bug[j]
+            if b in ass_bugs:
+                cur.execute("SELECT * FROM bugs_activity WHERE bug_id=" + str(b) + " order by bug_when")
 
-            div = soup.find("div", attrs={"id": "bugzilla-body"})
-            table = div.find("table")
+                start = None
+                end = None
+                result = cur.fetchall()
+                for k in result:
+                    if start is None:
+                        start = k[2]
 
-            data = []
-            for row in table.find_all("tr")[1:]:
-                dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
-                data.append(dataset)
+                    if k[4].strip() == 'CLOSED' and k[5].strip() == 'VERIFIED':
+                        end = k[2]
 
-                # print(dataset)
-
-            # print(data)
-
-            if 'EST' in data[0][1]:
-                assigned_time = parser.parse(data[0][1], tzinfos={'EST': -5 * 3600})
-            else:
-                assigned_time = parser.parse(data[0][1], tzinfos={'EDT': -5 * 3600})
-
-            it = -1
-            try:
-                while True:
-                    if len(data[it]) == 5:
-                        if 'CLOSED' in data[it]:
-                            break
-                        else:
-                            it -= 1
-                    elif len(data[it]) == 3:
-                        if 'CLOSED' in data[it]:
-                            it -= 1
-                            while True:
-                                if len(data[it]) == 5:
-                                    break
-                                else:
-                                    it -= 1
-                            break
-                        else:
-                            it -= 1
-
-                if 'EST' in data[it][1]:
-                    finished_time = parser.parse(data[it][1], tzinfos={'EST': -5 * 3600})
-                else:
-                    finished_time = parser.parse(data[it][1], tzinfos={'EDT': -5 * 3600})
-
-                if ass in assignee_fixed_time:
-                    time = assignee_fixed_time[ass][0] + (finished_time - assigned_time)
-                    cnt = assignee_fixed_time[assignee][1] + 1
-
-                    assignee_fixed_time[ass] = [time, cnt]
-                else:
-                    assignee_fixed_time[ass] = [finished_time - assigned_time, 1]
-
-            except IndexError:
-                pass
-        except:
-            pass
+                if start is not None and end is not None:
+                    if j in assignee_fixed_time:
+                        time_count = assignee_fixed_time[j]
+                        time_count[0] += (end - start)
+                        time_count[1] += 1
+                        assignee_fixed_time[j] = time_count
+                    else:
+                        assignee_fixed_time[j] = [(end - start), 1]
+                elif start is not None and end is None:
+                    end = result[-1][2]
+                    if j in assignee_fixed_time:
+                        time_count = assignee_fixed_time[j]
+                        time_count[0] += (end - start)
+                        time_count[1] += 1
+                        assignee_fixed_time[j] = time_count
+                    else:
+                        assignee_fixed_time[j] = [(end - start), 1]
 
     assignee_avg_fixed_time = {}
 
-    for i in assignee_fixed_time:
-        j = assignee_fixed_time[i]
-        assignee_avg_fixed_time[i] = datetime.timedelta(seconds=((j[0].days * 86400 + j[0].seconds) / j[1]))
+    for b in assignee_fixed_time:
+        j = assignee_fixed_time[b]
+        assignee_avg_fixed_time[b] = datetime.timedelta(seconds=((j[0].days * 86400 + j[0].seconds) / j[1]))
 
     return assignee_avg_fixed_time
 
 
 def calculate_reopened_time(start, end):
-    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed")
+    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between "
+                + str(start) + " and " + str(end))
 
     assignee_bug = {}
     for i in cur.fetchall():
@@ -127,43 +110,40 @@ def calculate_reopened_time(start, end):
             bugs.add(j)
 
     assignee_reopened_cnt = {}
-    main_cnt = len(bugs)
-    for i in bugs:
-        print("Ongoing bug:", i, "Remaining :", main_cnt)
-        main_cnt -= 1
-        try:
-            with open('bug_html/' + str(i) + '.html', 'r') as fp:
-                html = fp.read()
+    for j in assignee_bug:
+        ass_bugs = assignee_bug[j]
+        if j in ass_bugs:
+            cur.execute("SELECT * FROM bugs_activity WHERE bug_id=" + str(j))
 
-            soup = BeautifulSoup(html, features="html.parser")
-
-            div = soup.find("div", attrs={"id": "bugzilla-body"})
-            table = div.find("table")
-
-            headings = [th.get_text() for th in table.find("tr").find_all("th")]
-
-            data = []
-            for row in table.find_all("tr")[1:]:
-                dataset = list(td.get_text().replace("\n", "").strip() for td in row.find_all("td"))
-                data.append(dataset)
-
-            for k in data:
+            reopened = False
+            result = cur.fetchall()
+            for k in result:
                 if 'REOPENED' in k:
-                    if assignee in assignee_reopened_cnt:
-                        reopened = assignee_reopened_cnt[assignee][0]
-                        tot = assignee_reopened_cnt[assignee][1]
-                        assignee_reopened_cnt[assignee] = [reopened + 1, tot + 1]
-                    else:
-                        assignee_reopened_cnt[assignee] = [1, 1]
+                    reopened = True
+
+            if reopened:
+                if j in assignee_reopened_cnt:
+                    cnt_tot = assignee_reopened_cnt[j]
+                    cnt_tot[0] += 1
+                    cnt_tot[1] += 1
+                    assignee_reopened_cnt[j] = cnt_tot
                 else:
-                    if assignee in assignee_reopened_cnt:
-                        reopened = assignee_reopened_cnt[assignee][0]
-                        tot = assignee_reopened_cnt[assignee][1]
-                        assignee_reopened_cnt[assignee] = [reopened, tot + 1]
-                    else:
-                        assignee_reopened_cnt[assignee] = [0, 1]
-        except Exception:
-            pass
+                    assignee_reopened_cnt[j] = [1, 1]
+            else:
+                if j in assignee_reopened_cnt:
+                    cnt_tot = assignee_reopened_cnt[j]
+                    cnt_tot[1] += 1
+                    assignee_reopened_cnt[j] = cnt_tot
+                else:
+                    assignee_reopened_cnt[j] = [0, 1]
+
+    assignee_avg_reopened = {}
+
+    for b in assignee_reopened_cnt:
+        j = assignee_reopened_cnt[b]
+        assignee_avg_reopened[b] = (j[0] / j[1]) * 100
+
+    return assignee_avg_reopened
 
 
 if __name__ == '__main__':
@@ -172,23 +152,32 @@ if __name__ == '__main__':
     wb = openpyxl.Workbook()
     sheet = wb.active
 
-    titles = ['Year', 'Avg Fixed Time', 'Avg Reopened Time']
+    titles = ['Year', 'Assignee', 'Avg Fixed Time', 'Avg Reopened Time']
     sheet.append(titles)
 
     for yr in years:
-        val = []
+        if len(assignee_names.values()) == 20:
+            break
+
         print("Ongoing year " + str(yr))
 
-        val.append("Upto: " + str(yr))
-        avg = calculate_avg_fixed_time(years[0], yr)
+        avg = calculate_avg_fixed_time(yr, yr)
+        avg_reopened = calculate_reopened_time(yr, yr)
 
         for ass in assignee:
+            val = ["Upto: " + str(yr), ass]
             try:
                 val.append(avg[ass])
             except KeyError:
                 val.append("")
 
-        sheet.append(val)
+            try:
+                val.append(avg_reopened[ass])
+            except KeyError:
+                val.append("")
 
-    wb.save("analysis_.xlsx")
+            sheet.append(val)
+
+    wb.save("assignee_bug_analysis.xlsx")
     print("Finished!")
+
