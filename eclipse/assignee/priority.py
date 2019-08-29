@@ -27,8 +27,13 @@ with db:
 
     print(assignee_priority_cnt)
 
+<<<<<<< HEAD
     # with open('assignee_priority_count.txt', 'wb') as fp:
     #     pickle.dump(assignee_priority_cnt, fp)
+=======
+    with open('assignee_priority_count.txt', 'wb') as fp:
+        pickle.dump(assignee_priority_cnt, fp)
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
 
     print("Process Finished!")
 

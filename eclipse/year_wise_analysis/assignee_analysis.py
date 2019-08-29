@@ -1,6 +1,12 @@
 import datetime
 
 import openpyxl
+<<<<<<< HEAD
+=======
+from bs4 import BeautifulSoup
+from dateutil import parser
+
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
 from local_settings_eclipse import db
 
 # [13, 18, 35, 39, 47, 51, 53, 54, 238, 481, 2169, 2206, 2210, 2212, 2213, 2214, 2215, 2217, 2219, 2220, 2224, 2225,
@@ -20,7 +26,11 @@ assignee_names = {}
 
 
 def calculate_avg_fixed_time(start, end):
+<<<<<<< HEAD
     cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM bugs where year(creation_ts) between "
+=======
+    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between "
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
                 + str(start) + " and " + str(end))
 
     assignee_bug = {}
@@ -89,7 +99,11 @@ def calculate_avg_fixed_time(start, end):
 
 
 def calculate_reopened_time(start, end):
+<<<<<<< HEAD
     cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM bugs where year(creation_ts) between "
+=======
+    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between "
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
                 + str(start) + " and " + str(end))
 
     assignee_bug = {}
@@ -107,6 +121,7 @@ def calculate_reopened_time(start, end):
             bugs.add(j)
 
     assignee_reopened_cnt = {}
+<<<<<<< HEAD
     # main_cnt = len(bugs)
 
     for b in bugs:
@@ -139,6 +154,34 @@ def calculate_reopened_time(start, end):
                         assignee_reopened_cnt[j] = cnt_tot
                     else:
                         assignee_reopened_cnt[j] = [0, 1]
+=======
+    for j in assignee_bug:
+        ass_bugs = assignee_bug[j]
+        if j in ass_bugs:
+            cur.execute("SELECT * FROM bugs_activity WHERE bug_id=" + str(j))
+
+            reopened = False
+            result = cur.fetchall()
+            for k in result:
+                if 'REOPENED' in k:
+                    reopened = True
+
+            if reopened:
+                if j in assignee_reopened_cnt:
+                    cnt_tot = assignee_reopened_cnt[j]
+                    cnt_tot[0] += 1
+                    cnt_tot[1] += 1
+                    assignee_reopened_cnt[j] = cnt_tot
+                else:
+                    assignee_reopened_cnt[j] = [1, 1]
+            else:
+                if j in assignee_reopened_cnt:
+                    cnt_tot = assignee_reopened_cnt[j]
+                    cnt_tot[1] += 1
+                    assignee_reopened_cnt[j] = cnt_tot
+                else:
+                    assignee_reopened_cnt[j] = [0, 1]
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
 
     assignee_avg_reopened = {}
 
@@ -149,6 +192,7 @@ def calculate_reopened_time(start, end):
     return assignee_avg_reopened
 
 
+<<<<<<< HEAD
 def get_priority_points(priority):
     points = 0
     for i in priority:
@@ -233,13 +277,19 @@ def calculate_severity(start, end):
     return assignee_severity_points
 
 
+=======
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
 if __name__ == '__main__':
     years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010]
 
     wb = openpyxl.Workbook()
     sheet = wb.active
 
+<<<<<<< HEAD
     titles = ['Year', 'Assignee', 'Avg Fixed Time', 'Avg Reopened Time', "Priority Points", "Severity Points"]
+=======
+    titles = ['Year', 'Assignee', 'Avg Fixed Time', 'Avg Reopened Time']
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
     sheet.append(titles)
 
     for yr in years:
@@ -248,10 +298,15 @@ if __name__ == '__main__':
 
         print("Ongoing year " + str(yr))
 
+<<<<<<< HEAD
         avg = calculate_avg_fixed_time(2001, yr)
         avg_reopened = calculate_reopened_time(yr, yr)
         priority_points = calculate_priority(yr, yr)
         severity_points = calculate_severity(yr, yr)
+=======
+        avg = calculate_avg_fixed_time(yr, yr)
+        avg_reopened = calculate_reopened_time(yr, yr)
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
 
         for ass in assignee:
             val = ["Upto: " + str(yr), ass]
@@ -265,6 +320,7 @@ if __name__ == '__main__':
             except KeyError:
                 val.append("")
 
+<<<<<<< HEAD
             try:
                 val.append(priority_points[ass])
             except KeyError:
@@ -275,6 +331,8 @@ if __name__ == '__main__':
             except KeyError:
                 val.append("")
 
+=======
+>>>>>>> 847d6432758cc7a6c5721ab04a2aa8df1114db77
             sheet.append(val)
 
     wb.save("assignee_bug_analysis.xlsx")
