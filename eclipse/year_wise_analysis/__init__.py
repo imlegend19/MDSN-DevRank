@@ -192,8 +192,14 @@ def layer_2_d2(year):
             dev.append(i[0])
 
         cur.execute(
+<<<<<<< HEAD
             "select distinct who from longdescs where bug_id in (select distinct bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
                 year) + ")")
+=======
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id "
+            "from bugs where year(creation_ts) between " + str(start) + " and " + str(end) + ")")
+
+>>>>>>> origin/new
         filtered_who = []
         for i in cur.fetchall():
             filtered_who.append(i[0])
@@ -361,8 +367,13 @@ def layer_4(year):
             dev.append(i[0])
 
         cur.execute(
+<<<<<<< HEAD
             "select distinct who from longdescs where bug_id in (select distinct bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
                 year) + ")")
+=======
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from "
+            "bugs where year(creation_ts) between " + str(start) + " and " + str(end) + ")")
+>>>>>>> origin/new
 
         filtered_who = []
         for i in cur.fetchall():
