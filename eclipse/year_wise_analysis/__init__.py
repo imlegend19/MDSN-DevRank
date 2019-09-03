@@ -1,5 +1,6 @@
 import datetime
 from itertools import permutations
+
 import openpyxl
 from bs4 import BeautifulSoup
 from dateutil import parser
@@ -20,7 +21,7 @@ with db:
         assignees.append(i[0])
 
 
-def layer_1(year):
+def layer_1(start, end):
     with db:
         cur = db.cursor()
         cur.execute("SELECT who FROM who_commenting_on_more_than_10_bugs")
@@ -31,14 +32,14 @@ def layer_1(year):
 
         print("\tSetting up dict for who_id's who have commented on same bug...")
         cur.execute(
-            "select distinct who from longdescs where bug_id in (select distinct bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year) + ")")
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts) between " + str(
+                start) + " and " + str(end))
 
         filtered_who = []
         for i in cur.fetchall():
             filtered_who.append(i[0])
 
-        cur.execute("SELECT distinctrow bug_id, who from longdescs")
+        cur.execute("SELECT distinctrow bug_id, who from test_longdescs_fixed_closed")
         bug_who = {}
         bugs_taken = []
         for i in cur.fetchall():
@@ -55,8 +56,8 @@ def layer_1(year):
 
         print("\tFetching bugs from test_bug...")
         cur.execute(
-            "SELECT distinct bug_id FROM bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year))
+            "SELECT distinct bug_id FROM bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts) between " + str(
+                start) + " and " + str(end))
 
         bugs = []
         for i in cur.fetchall():
@@ -179,7 +180,7 @@ def layer_2_d1(year):
         return who_centrality
 
 
-def layer_2_d2(year):
+def layer_2_d2(start, end):
     with db:
         print("\tConnected to db!")
         cur = db.cursor()
@@ -192,21 +193,16 @@ def layer_2_d2(year):
             dev.append(i[0])
 
         cur.execute(
-<<<<<<< HEAD
-            "select distinct who from longdescs where bug_id in (select distinct bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year) + ")")
-=======
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id "
-            "from bugs where year(creation_ts) between " + str(start) + " and " + str(end) + ")")
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between " + str(
+                start) + " and " + str(end) + ")")
 
->>>>>>> origin/new
         filtered_who = []
         for i in cur.fetchall():
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow product_id, component_id, bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year))
+            "SELECT distinctrow product_id, component_id, bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts) between " + str(
+                start) + " and " + str(end))
 
         prod_comp_bug = {}
         for i in cur.fetchall():
@@ -354,7 +350,7 @@ def layer_3(year):
         return who_centrality
 
 
-def layer_4(year):
+def layer_4(start, end):
     with db:
         print("\tConnected to db!")
         cur = db.cursor()
@@ -367,21 +363,16 @@ def layer_4(year):
             dev.append(i[0])
 
         cur.execute(
-<<<<<<< HEAD
-            "select distinct who from longdescs where bug_id in (select distinct bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year) + ")")
-=======
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from "
-            "bugs where year(creation_ts) between " + str(start) + " and " + str(end) + ")")
->>>>>>> origin/new
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between " + str(
+                start) + " and " + str(end) + ")")
 
         filtered_who = []
         for i in cur.fetchall():
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow op_sys, bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts)=" + str(
-                year))
+            "SELECT distinctrow op_sys, bug_id from bugs where resolution='FIXED' and bug_status='CLOSED' and year(creation_ts) between " + str(
+                start) + " and " + str(end))
 
         os_bug = {}
         for i in cur.fetchall():
@@ -711,16 +702,17 @@ if __name__ == '__main__':
     wb = openpyxl.Workbook()
     sheet = wb.active
 
-    titles = ['Year', 'Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Re-open Count', 'Avg First Fixed',
+    titles = ['Year', 'Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Re-open Count',
+              'Avg First Fixed',
               'Priority', 'Severity']
 
     for i in years:
         print("Ongoing: " + str(i))
-        l1_centrality = layer_1(i)
+        l1_centrality = layer_1(2001, i)
         l2_d1_centrality = layer_2_d1(i)
-        l2_d2_centrality = layer_2_d2(i)
+        l2_d2_centrality = layer_2_d2(2001, i)
         l3_centrality = layer_3(i)
-        l4_centrality = layer_4(i)
+        l4_centrality = layer_4(2001, i)
 
         calculate_avg_fixed(i)
 
