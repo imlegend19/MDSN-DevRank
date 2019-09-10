@@ -57,6 +57,7 @@ coverage.xml
 *.log
 local_settings_gnome.py
 local_settings_eclipse.py
+local_settings_netbeans.py
 db.sqlite3
 
 # Flask stuff:

@@ -1,9 +1,9 @@
 import pickle
 
-url = '/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/global_eigenvector/EigenVector/' \
+url = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/global_eigenvector/EigenVector/' \
       'definition_2/global_eigenvector_fc.txt'
 
-TOTAL_WHO = 1161
+TOTAL_WHO = 507
 
 with open(url, 'rb') as fp:
     ge = pickle.load(fp)
@@ -23,7 +23,7 @@ z = [x for (y, x) in sorted(zip(ev_centrality, who), key=lambda pair: pair[0], r
 ev_centrality.sort(reverse=True)
 # print(ev_centrality)
 
-with open('/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/adjacency_matrix/relative_id.txt',
+with open('/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/adjacency_matrix/relative_id.txt',
           'rb') as fp:
     rel_id = pickle.load(fp)
 

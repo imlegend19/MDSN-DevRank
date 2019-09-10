@@ -1,10 +1,10 @@
 import pickle
 import numpy as np
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/"
-INFLUENCE_MATRIX = "influence_matrix/definition_2/"
-ADJACENCY_MATRIX = "adjacency_matrix/definition_2/"
-TOTAL_WHO = 1161
+RELATIVE_PATH = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/"
+INFLUENCE_MATRIX = "influence_matrix/definition_1/"
+ADJACENCY_MATRIX = "adjacency_matrix/definition_1/"
+TOTAL_WHO = 507
 
 
 def fetch_file(path):

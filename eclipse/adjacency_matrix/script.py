@@ -2,7 +2,7 @@ import pickle
 
 from local_settings_eclipse import db
 
-RELATIVE_PATH = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/edges/definition_1/"
+RELATIVE_PATH = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_2/"
 TOTAL = 0
 relative_ids = {}
 
