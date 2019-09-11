@@ -752,8 +752,8 @@ if __name__ == '__main__':
               'Total Components', 'Priority Points', 'Severity Points']
 
     sheet.append(titles)
-    start = 2006
-    end = 2006
+    start = 2007
+    end = 2007
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
     l2_d2_centrality = layer_2_d2(start, end)

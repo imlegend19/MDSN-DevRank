@@ -7,7 +7,7 @@ def fill_ranks_lst(sheet):
     lst = {}
 
     for _ in range(2, sheet.max_row):
-        lst[int(sheet.cell(_, 1).value)] = float(sheet.cell(_, 6).value)
+        lst[int(sheet.cell(_, 1).value)] = float(sheet.cell(_, 12).value)
 
     return lst
 
