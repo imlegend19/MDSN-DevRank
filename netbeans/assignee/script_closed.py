@@ -8,7 +8,7 @@ with db:
 
     cur = db.cursor()
 
-    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed")
+    cur.execute("SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005")
 
     assignee_bug = {}
     for i in cur.fetchall():

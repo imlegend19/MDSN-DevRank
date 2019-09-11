@@ -26,8 +26,8 @@ def layer_1(start, end):
 
         print("\tSetting up dict for who_id's who have commented on same bug...")
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
-                start, end))
+            "select distinct who from test_longdescs_fixed_closed where bug_id in "
+            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(start, end))
 
         filtered_who = []
         for i in cur.fetchall():
@@ -51,7 +51,7 @@ def layer_1(start, end):
         print("\tFetching bugs from test_bug...")
         cur.execute(
             "SELECT distinct bug_id FROM test_bugs_fixed_closed where year(creation_ts) between " + str(
-                start) + " and " + str(end))
+                start) + " and " + str(end) + " and month(creation_ts) between 1 and 6")
 
         bugs = []
         for i in cur.fetchall():
@@ -79,7 +79,7 @@ def layer_1(start, end):
         graph.add_edges_from(list(edges))
 
         print("\tCalculating eigenvector centrality...")
-        centrality = nx.eigenvector_centrality(graph)
+        centrality = nx.eigenvector_centrality_numpy(graph)
 
         ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
         ec.reverse()
@@ -104,7 +104,8 @@ def layer_2_d1(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in "
+            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
                 start, end))
 
         filtered_who = []
@@ -112,7 +113,7 @@ def layer_2_d1(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow product_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
+            "SELECT distinctrow product_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
                 start, end))
         product_bug = {}
         for i in cur.fetchall():
@@ -191,7 +192,7 @@ def layer_2_d2(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
                 start, end))
 
         filtered_who = []
@@ -199,7 +200,7 @@ def layer_2_d2(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow product_id, component_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
+            "SELECT distinctrow product_id, component_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
                 start, end))
 
         prod_comp_bug = {}
@@ -278,7 +279,7 @@ def layer_3(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
                 start, end))
 
         filtered_who = []
@@ -286,7 +287,7 @@ def layer_3(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow reporter, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
+            "SELECT distinctrow reporter, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
                 start, end))
 
         reporter_bug = {}
@@ -365,7 +366,7 @@ def layer_4(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
                 start, end))
 
         filtered_who = []
@@ -374,7 +375,7 @@ def layer_4(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
+            "SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
                 start, end))
 
         os_bug = {}
@@ -446,7 +447,8 @@ def calculate_avg_fixed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -507,14 +509,16 @@ def calculate_priority(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1}".format(start, end))
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignees = []
         for i in cur.fetchall():
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} group by assigned_to, priority".format(start, end))
+            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, priority".format(
+                start, end))
 
         assignee_priority_cnt = {}
         for i in cur.fetchall():
@@ -537,14 +541,16 @@ def calculate_severity(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1}".format(start, end))
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignees = []
         for i in cur.fetchall():
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} group by assigned_to, bug_severity".format(start, end))
+            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, bug_severity".format(
+                start, end))
 
         assignee_severity_cnt = {}
 
@@ -607,7 +613,8 @@ def calculate_reopened(start, end):
         cur = db.cursor()
 
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -668,7 +675,8 @@ def calculate_avg_closed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -725,9 +733,8 @@ def calculate_avg_closed(start, end):
     return assignee_closed_time
 
 
-def calculate_components():
-    cur.execute("select assigned_to, count(distinct component_id) from test_bugs_fixed_closed "
-                "group by assigned_to")
+def calculate_components(start, end):
+    cur.execute("select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to".format(start, end))
 
     assignee_comp = {}
     for i in cur.fetchall():
@@ -745,8 +752,8 @@ if __name__ == '__main__':
               'Total Components', 'Priority Points', 'Severity Points']
 
     sheet.append(titles)
-    start = 2010
-    end = 2010
+    start = 2006
+    end = 2006
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
     l2_d2_centrality = layer_2_d2(start, end)
@@ -755,7 +762,7 @@ if __name__ == '__main__':
     avg_fixed = calculate_avg_fixed(start, end)
     avg_closed = calculate_avg_closed(start, end)
     avg_reopened = calculate_reopened(start, end)
-    components = calculate_components()
+    components = calculate_components(start, end)
     priority = calculate_priority(start, end)
     severity = calculate_severity(start, end)
 
@@ -780,6 +787,6 @@ if __name__ == '__main__':
         except Exception:
             pass
 
-    wb.save("analysis_" + str(start) + "_" + str(end) + ".xlsx")
+    wb.save("analysis_" + str(start) + ".xlsx")
 
 print("Finished!")

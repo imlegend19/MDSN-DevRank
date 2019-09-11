@@ -77,11 +77,8 @@ def layer1(product_id):
                         bug_who[i[0]] = {i[1]}
                 bugs_taken.append(i[0])
 
-        with open("bugs_taken.txt", 'wb') as fp:
-            pickle.dump(bugs_taken, fp)
-
         print("Fetching bugs from test_bug...")
-        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
+        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005")
 
         bugs = []
         for i in cur.fetchall():
