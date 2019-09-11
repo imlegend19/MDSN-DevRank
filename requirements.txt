@@ -1,3 +1,4 @@
+matplotlib
 python-dateutil
 beautifulsoup4
 scipy
