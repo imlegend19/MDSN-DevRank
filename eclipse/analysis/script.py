@@ -752,8 +752,8 @@ if __name__ == '__main__':
               'Total Components', 'Priority Points', 'Severity Points']
 
     sheet.append(titles)
-    start = 2007
-    end = 2007
+    start = 2003
+    end = 2008
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
     l2_d2_centrality = layer_2_d2(start, end)
@@ -787,6 +787,6 @@ if __name__ == '__main__':
         except Exception:
             pass
 
-    wb.save("analysis_" + str(start) + ".xlsx")
+    wb.save("analysis_" + str(start) + "_" + str(end) + ".xlsx")
 
 print("Finished!")
