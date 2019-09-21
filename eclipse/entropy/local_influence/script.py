@@ -31,9 +31,11 @@ for i in graph.nodes:
 
     local_influence = 0
     for j in sub_graph.nodes:
-        local_influence += (degrees[j] / total_degree) * math.log(degrees[j], 10)
+        local_influence += (degrees[j] / total_degree) * math.log(degrees[j] / total_degree, 10)
 
-    local_influence += (len(neighbors[i]) / (total_degree + len(neighbors[i]))) * math.log(len(neighbors[i]), 10)
+    pi = len(neighbors[i]) / (total_degree + len(neighbors[i]))
+    log_pi = math.log(pi, 10)
+    local_influence += pi * log_pi
 
     loc[i] = -local_influence
 
