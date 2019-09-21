@@ -79,24 +79,24 @@ with db:
                     print('err')
                 edges.add(j)
 
-    # with open('layer2_edges_fc.txt', 'wb') as file:
-    #     pickle.dump(edges, file)
+    with open('layer2_edges_fc.txt', 'wb') as file:
+        pickle.dump(edges, file)
 
     print("Saved edges_normal! Total edges_normal:", len(edges))
 
-    graph = nx.DiGraph()
-    graph.add_edges_from(list(edges))
-
-    neighbours = {}
-    for i in list(graph.nodes):
-        lst = list(graph.neighbors(i))
-        neighbours[i] = lst
-
-    print(neighbours)
-
-    path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/neighbours/definition_2/"
-    with open(path + "layer_2_neighbours.txt", 'wb') as fp:
-        pickle.dump(neighbours, fp)
+    # graph = nx.DiGraph()
+    # graph.add_edges_from(list(edges))
+    #
+    # neighbours = {}
+    # for i in list(graph.nodes):
+    #     lst = list(graph.neighbors(i))
+    #     neighbours[i] = lst
+    #
+    # print(neighbours)
+    #
+    # path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/neighbours/definition_2/"
+    # with open(path + "layer_2_neighbours.txt", 'wb') as fp:
+    #     pickle.dump(neighbours, fp)
 
     # degrees = {}
     # for (node, val) in graph.degree:
