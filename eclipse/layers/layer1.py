@@ -77,8 +77,8 @@ def layer1(product_id):
                         bug_who[i[0]] = {i[1]}
                 bugs_taken.append(i[0])
 
-        with open("bugs_taken.txt", 'wb') as fp:
-            pickle.dump(bugs_taken, fp)
+        # with open("bugs_taken.txt", 'wb') as fp:
+        #     pickle.dump(bugs_taken, fp)
 
         print("Fetching bugs from test_bug...")
         cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed")
@@ -105,27 +105,52 @@ def layer1(product_id):
                         print('err')
                     edges.add(j)
 
-        save_edges(edges)
+        # save_edges(edges)
         print("Saved edges_normal! Total edges_normal:", len(edges))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))
 
-        print("Calculating eigenvector centrality...")
-        centrality = nx.eigenvector_centrality(graph)
+        neighbours = {}
+        for i in list(graph.nodes):
+            lst = list(graph.neighbors(i))
+            neighbours[i] = lst
 
-        ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
-        ec.reverse()
+        print(neighbours)
 
-        who_centrality = {}
+        path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/neighbours/definition_1/"
+        with open(path + "layer_1_neighbours.txt", 'wb') as fp:
+            pickle.dump(neighbours, fp)
 
-        for i in ec:
-            who_centrality[i[1]] = i[0]
+        path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/neighbours/definition_2/"
+        with open(path + "layer_1_neighbours.txt", 'wb') as fp:
+            pickle.dump(neighbours, fp)
 
-        with open("l1_centrality.txt", 'wb') as fp:
-            pickle.dump(who_centrality, fp)
+        # degrees = {}
+        # for (node, val) in graph.degree:
+        #     degrees[node] = val
+        #
+        # print(degrees)
+        #
+        # path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/degree_centrality/definition_2/"
+        # with open(path + "layer_1_degree.txt", 'wb') as fp:
+        #     pickle.dump(degrees, fp)
 
-        save_ranks(ec)
+        # print("Calculating eigenvector centrality...")
+        # centrality = nx.eigenvector_centrality(graph)
+        #
+        # ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+        # ec.reverse()
+        #
+        # who_centrality = {}
+        #
+        # for i in ec:
+        #     who_centrality[i[1]] = i[0]
+        #
+        # with open("l1_centrality.txt", 'wb') as fp:
+        #     pickle.dump(who_centrality, fp)
+        #
+        # save_ranks(ec)
 
         print("Process Competed!")
 
