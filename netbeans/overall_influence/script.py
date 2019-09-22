@@ -1,14 +1,14 @@
 import pickle
 import networkx as nx
 
-layer = 4
+layer = 2
 
 w1 = 0.6
 w2 = 0.4
 
-PATH_LI = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/entropy/local_influence/definition_2/"
-PATH_II = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/indirect_influence/definition_2/"
-PATH_EDGES = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_2/"
+PATH_LI = "/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/entropy/local_influence/definition_2/"
+PATH_II = "/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/indirect_influence/definition_2/"
+PATH_EDGES = "/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/edges/definition_2/"
 
 with open(PATH_LI + "layer_" + str(layer) + "_local_influence.txt", 'rb') as fp:
     li = pickle.load(fp)

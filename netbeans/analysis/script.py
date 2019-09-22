@@ -1,4 +1,5 @@
 import datetime
+import pickle
 from itertools import permutations
 
 import networkx as nx
@@ -446,7 +447,8 @@ def calculate_avg_fixed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -507,14 +509,16 @@ def calculate_priority(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(start, end))
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignees = []
         for i in cur.fetchall():
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, priority".format(start, end))
+            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, priority".format(
+                start, end))
 
         assignee_priority_cnt = {}
         for i in cur.fetchall():
@@ -537,14 +541,16 @@ def calculate_severity(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(start, end))
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignees = []
         for i in cur.fetchall():
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, bug_severity".format(start, end))
+            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, bug_severity".format(
+                start, end))
 
         assignee_severity_cnt = {}
 
@@ -607,7 +613,8 @@ def calculate_reopened(start, end):
         cur = db.cursor()
 
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -668,7 +675,8 @@ def calculate_avg_closed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(start, end))
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+                start, end))
 
         assignee_bug = {}
         for i in cur.fetchall():
@@ -726,8 +734,9 @@ def calculate_avg_closed(start, end):
 
 
 def calculate_components(start, end):
-    cur.execute("select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 "
-                "group by assigned_to".format(start, end))
+    cur.execute(
+        "select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 "
+        "group by assigned_to".format(start, end))
 
     assignee_comp = {}
     for i in cur.fetchall():
@@ -742,10 +751,27 @@ if __name__ == '__main__':
     sheet = wb.active
 
     titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points']
+              'Total Components', 'Priority Points', 'Severity Points', 'OI Layer 1', 'OI Layer 2-D1', 'OI Layer 2-D2',
+              'OI Layer 3', 'OI Layer 4']
+
+    # PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/overall_influence/'
+    # with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
+    #     layer_1_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
+    #     layer_2_d1_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
+    #     layer_2_d2_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
+    #     layer_3_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
+    #     layer_4_ii = pickle.load(fp)
 
     sheet.append(titles)
-    start = 2005
+    start = 2001
     end = 2005
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
@@ -774,12 +800,17 @@ if __name__ == '__main__':
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
+            # lst.append(layer_1_ii[j])
+            # lst.append(layer_2_d1_ii[j])
+            # lst.append(layer_2_d2_ii[j])
+            # lst.append(layer_3_ii[j])
+            # lst.append(layer_4_ii[j])
 
             print(lst)
             sheet.append(lst)
         except Exception:
             pass
 
-    wb.save("analysis_" + str(start) + ".xlsx")
+    wb.save("analysis_" + str(start) + "_" + str(end) + ".xlsx")
 
 print("Finished!")

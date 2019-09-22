@@ -754,7 +754,7 @@ if __name__ == '__main__':
 
     titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
               'Total Components', 'Priority Points', 'Severity Points', 'OI Layer 1', 'OI Layer 2-D1',
-              'OI Layer 2-D2', 'OI Layer 3']
+              'OI Layer 2-D2', 'OI Layer 3', 'OI Layer 4']
 
     PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/overall_influence/'
     with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
@@ -769,9 +769,12 @@ if __name__ == '__main__':
     with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
         layer_3_ii = pickle.load(fp)
 
+    with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
+        layer_4_ii = pickle.load(fp)
+
     sheet.append(titles)
-    start = 2003
-    end = 2005
+    start = 2002
+    end = 2004
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
     l2_d2_centrality = layer_2_d2(start, end)
@@ -803,6 +806,7 @@ if __name__ == '__main__':
             lst.append(layer_2_d1_ii[j])
             lst.append(layer_2_d2_ii[j])
             lst.append(layer_3_ii[j])
+            lst.append(layer_4_ii[j])
 
             print(lst)
             sheet.append(lst)
