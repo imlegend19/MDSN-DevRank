@@ -1,14 +1,14 @@
 import pickle
 import networkx as nx
 
-layer = 1
+layer = 2
 
 w1 = 0.6
 w2 = 0.4
 
-PATH_LI = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/entropy/local_influence/definition_1/"
-PATH_II = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/indirect_influence/definition_1/"
-PATH_EDGES = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_1/"
+PATH_LI = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/entropy/local_influence/definition_2/"
+PATH_II = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/indirect_influence/definition_2/"
+PATH_EDGES = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_2/"
 
 with open(PATH_LI + "layer_" + str(layer) + "_local_influence.txt", 'rb') as fp:
     li = pickle.load(fp)
@@ -31,7 +31,7 @@ for i in graph.nodes:
     except KeyError:
         print(i)
 
-with open("overall_influence.txt", 'wb') as fp:
+with open("overall_influence_layer_" + str(layer) + "_d2" + ".txt", 'wb') as fp:
     pickle.dump(overall_influence, fp)
 
 print("Average:", round(sum(oi) / len(oi), 1))

@@ -13,19 +13,12 @@ with open(PATH_EDGES + "layer" + str(layer) + "_edges_fc.txt", 'rb') as fp:
     edges = pickle.load(fp)
 
 with open(PATH_NEIGH + "layer_" + str(layer) + "_neighbours.txt", 'rb') as fp:
-    neighbours = pickle.load(fp)
-
-graph = {}
-for i in edges:
-    if i[0] in graph:
-        val = graph[i[0]]
-        val.append(i[1])
-        graph[i[0]] = val
-    else:
-        graph[i[0]] = [i[1]]
+    graph = pickle.load(fp)
 
 indirect_influence = {}
+remain = len(graph.keys())
 for i in graph.keys():
+    print("Remaining:", remain)
     sg = graph[i]
 
     hop2_neighs_dict = {}
@@ -57,6 +50,8 @@ for i in graph.keys():
         indirect_influence[i] = ii / tot
     except ZeroDivisionError:
         print(i)
+
+    remain -= 1
 
 
 with open("indirect_influence_" + str(layer) + ".txt", 'wb') as fp:

@@ -1,4 +1,5 @@
 import datetime
+import pickle
 from itertools import permutations
 
 import networkx as nx
@@ -27,7 +28,8 @@ def layer_1(start, end):
         print("\tSetting up dict for who_id's who have commented on same bug...")
         cur.execute(
             "select distinct who from test_longdescs_fixed_closed where bug_id in "
-            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(start, end))
+            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+                start, end))
 
         filtered_who = []
         for i in cur.fetchall():
@@ -734,7 +736,9 @@ def calculate_avg_closed(start, end):
 
 
 def calculate_components(start, end):
-    cur.execute("select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to".format(start, end))
+    cur.execute(
+        "select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to".format(
+            start, end))
 
     assignee_comp = {}
     for i in cur.fetchall():
@@ -749,11 +753,25 @@ if __name__ == '__main__':
     sheet = wb.active
 
     titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points']
+              'Total Components', 'Priority Points', 'Severity Points', 'OI Layer 1', 'OI Layer 2-D1',
+              'OI Layer 2-D2', 'OI Layer 3']
+
+    PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/overall_influence/'
+    with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
+        layer_1_ii = pickle.load(fp)
+
+    with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
+        layer_2_d1_ii = pickle.load(fp)
+
+    with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
+        layer_2_d2_ii = pickle.load(fp)
+
+    with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
+        layer_3_ii = pickle.load(fp)
 
     sheet.append(titles)
-    start = 2005
-    end = 2010
+    start = 2003
+    end = 2005
     l1_centrality = layer_1(start, end)
     l2_d1_centrality = layer_2_d1(start, end)
     l2_d2_centrality = layer_2_d2(start, end)
@@ -781,6 +799,10 @@ if __name__ == '__main__':
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
+            lst.append(layer_1_ii[j])
+            lst.append(layer_2_d1_ii[j])
+            lst.append(layer_2_d2_ii[j])
+            lst.append(layer_3_ii[j])
 
             print(lst)
             sheet.append(lst)

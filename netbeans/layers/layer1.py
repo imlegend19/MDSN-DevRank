@@ -102,27 +102,37 @@ def layer1(product_id):
                         print('err')
                     edges.add(j)
 
-        save_edges(edges)
-        print("Saved edges_normal! Total edges_normal:", len(edges))
+        # save_edges(edges)
+        # print("Saved edges_normal! Total edges_normal:", len(edges))
 
         graph = nx.DiGraph()
         graph.add_edges_from(list(edges))
 
-        print("Calculating eigenvector centrality...")
-        centrality = nx.eigenvector_centrality(graph)
+        neighbours = {}
+        for i in list(graph.nodes):
+            lst = list(graph.neighbors(i))
+            neighbours[i] = lst
 
-        ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
-        ec.reverse()
+        print(neighbours)
+        path = "/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/neighbours/definition_2/"
+        with open(path + "layer_1_neighbours.txt", 'wb') as fp:
+            pickle.dump(neighbours, fp)
 
-        who_centrality = {}
-
-        for i in ec:
-            who_centrality[i[1]] = i[0]
-
-        with open("l1_centrality.txt", 'wb') as fp:
-            pickle.dump(who_centrality, fp)
-
-        save_ranks(ec)
+        # print("Calculating eigenvector centrality...")
+        # centrality = nx.eigenvector_centrality(graph)
+        #
+        # ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+        # ec.reverse()
+        #
+        # who_centrality = {}
+        #
+        # for i in ec:
+        #     who_centrality[i[1]] = i[0]
+        #
+        # with open("l1_centrality.txt", 'wb') as fp:
+        #     pickle.dump(who_centrality, fp)
+        #
+        # save_ranks(ec)
 
         print("Process Competed!")
 
