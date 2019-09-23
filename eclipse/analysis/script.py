@@ -757,20 +757,26 @@ if __name__ == '__main__':
               'OI Layer 2-D2', 'OI Layer 3', 'OI Layer 4']
 
     PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/overall_influence/'
-    with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
-        layer_1_ii = pickle.load(fp)
+    # with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
+    #     layer_1_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
+    #     layer_2_d1_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
+    #     layer_2_d2_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
+    #     layer_3_ii = pickle.load(fp)
+    #
+    # with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
+    #     layer_4_ii = pickle.load(fp)
 
-    with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
-        layer_2_d1_ii = pickle.load(fp)
+    with open(PATH + "overall_influence_combined_d1.txt", 'rb') as fp:
+        cd1 = pickle.load(fp)
 
-    with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
-        layer_2_d2_ii = pickle.load(fp)
-
-    with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
-        layer_3_ii = pickle.load(fp)
-
-    with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
-        layer_4_ii = pickle.load(fp)
+    with open(PATH + "overall_influence_combined_d2.txt", 'rb') as fp:
+        cd2 = pickle.load(fp)
 
     sheet.append(titles)
     start = 2002
@@ -802,11 +808,8 @@ if __name__ == '__main__':
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
-            lst.append(layer_1_ii[j])
-            lst.append(layer_2_d1_ii[j])
-            lst.append(layer_2_d2_ii[j])
-            lst.append(layer_3_ii[j])
-            lst.append(layer_4_ii[j])
+            lst.append(cd1[j])
+            lst.append(cd2[j])
 
             print(lst)
             sheet.append(lst)

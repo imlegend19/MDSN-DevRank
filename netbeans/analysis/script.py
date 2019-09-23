@@ -751,10 +751,9 @@ if __name__ == '__main__':
     sheet = wb.active
 
     titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points', 'OI Layer 1', 'OI Layer 2-D1', 'OI Layer 2-D2',
-              'OI Layer 3', 'OI Layer 4']
+              'Total Components', 'Priority Points', 'Severity Points', 'OI-C D1', 'OI-C D2']
 
-    # PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/overall_influence/'
+    PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/overall_influence/'
     # with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
     #     layer_1_ii = pickle.load(fp)
     #
@@ -769,6 +768,12 @@ if __name__ == '__main__':
     #
     # with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
     #     layer_4_ii = pickle.load(fp)
+
+    with open(PATH + "overall_influence_combined_d1.txt", 'rb') as fp:
+        cd1 = pickle.load(fp)
+
+    with open(PATH + "overall_influence_combined_d2.txt", 'rb') as fp:
+        cd2 = pickle.load(fp)
 
     sheet.append(titles)
     start = 2001
@@ -805,6 +810,8 @@ if __name__ == '__main__':
             # lst.append(layer_2_d2_ii[j])
             # lst.append(layer_3_ii[j])
             # lst.append(layer_4_ii[j])
+            lst.append(cd1[j])
+            lst.append(cd2[j])
 
             print(lst)
             sheet.append(lst)

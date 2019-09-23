@@ -83,19 +83,19 @@ with db:
 
     print("Saved edges_normal! Total edges_normal:", len(edges))
 
-    # graph = nx.DiGraph()
-    # graph.add_edges_from(list(edges))
-    #
-    # neighbours = {}
-    # for i in list(graph.nodes):
-    #     lst = list(graph.neighbors(i))
-    #     neighbours[i] = lst
-    #
-    # print(neighbours)
-    #
-    # path = "/home/imlegend19/PycharmProjects/Research - Data Mining/eclipse/neighbours/definition_1/"
-    # with open(path + "layer_2_neighbours.txt", 'wb') as fp:
-    #     pickle.dump(neighbours, fp)
+    graph = nx.DiGraph()
+    graph.add_edges_from(list(edges))
+
+    neighbours = {}
+    for i in list(graph.nodes):
+        lst = list(graph.neighbors(i))
+        neighbours[i] = lst
+
+    print(neighbours)
+
+    path = "/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/neighbours/definition_1/"
+    with open(path + "layer_2_neighbours.txt", 'wb') as fp:
+        pickle.dump(neighbours, fp)
 
     # degrees = {}
     # for (node, val) in graph.degree:
@@ -107,35 +107,35 @@ with db:
     # with open(path + "layer_2_degree.txt", 'wb') as fp:
     #     pickle.dump(degrees, fp)
 
-    # print("Calculating eigenvector centrality...")
-    # centrality = nx.eigenvector_centrality(graph)
-    #
-    # ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
-    # ec.reverse()
-    #
-    # who_centrality = {}
-    #
-    # for i in ec:
-    #     who_centrality[i[1]] = i[0]
-    #
-    # with open("l2_d1_centrality.txt", 'wb') as fp:
-    #     pickle.dump(who_centrality, fp)
-    #
-    # print("Setting up excel sheet...")
-    # wb = openpyxl.Workbook()
-    # sheet = wb.active
-    #
-    # sheet.append(["Rank", "Id", "Centrality"])
-    # sheet.append(["", "", ""])
-    #
-    # print("Ranking developers...")
-    #
-    # rank = 1
-    # for i in ec:
-    #     sheet.append([str(rank), i[1], i[0]])
-    #     rank += 1
-    #
-    # print("Saving...")
-    # wb.save("layer2_ranks_fc.xlsx")
+    print("Calculating eigenvector centrality...")
+    centrality = nx.eigenvector_centrality(graph)
+
+    ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
+    ec.reverse()
+
+    who_centrality = {}
+
+    for i in ec:
+        who_centrality[i[1]] = i[0]
+
+    with open("l2_d1_centrality.txt", 'wb') as fp:
+        pickle.dump(who_centrality, fp)
+
+    print("Setting up excel sheet...")
+    wb = openpyxl.Workbook()
+    sheet = wb.active
+
+    sheet.append(["Rank", "Id", "Centrality"])
+    sheet.append(["", "", ""])
+
+    print("Ranking developers...")
+
+    rank = 1
+    for i in ec:
+        sheet.append([str(rank), i[1], i[0]])
+        rank += 1
+
+    print("Saving...")
+    wb.save("layer2_ranks_fc.xlsx")
 
     print("Process Competed!")
