@@ -746,43 +746,63 @@ def calculate_components(start, end):
     return assignee_comp
 
 
+def get_bets_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_eg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "eigenvector/eigenvector_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_cl_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_hc_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_pg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
 if __name__ == '__main__':
     wb = openpyxl.Workbook()
     sheet = wb.active
 
-    titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points', 'OI-C D1', 'OI-C D2']
+    titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Combined', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
+              'Total Components', 'Priority Points', 'Severity Points', 'Betweenness', 'Closeness', 'H-Closeness', 'Pagerank']
 
-    PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/overall_influence/'
-    # with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
-    #     layer_1_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
-    #     layer_2_d1_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
-    #     layer_2_d2_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
-    #     layer_3_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
-    #     layer_4_ii = pickle.load(fp)
-
-    with open(PATH + "overall_influence_combined_d1.txt", 'rb') as fp:
-        cd1 = pickle.load(fp)
-
-    with open(PATH + "overall_influence_combined_d2.txt", 'rb') as fp:
-        cd2 = pickle.load(fp)
-
-    sheet.append(titles)
     start = 2001
     end = 2005
-    l1_centrality = layer_1(start, end)
-    l2_d1_centrality = layer_2_d1(start, end)
-    l2_d2_centrality = layer_2_d2(start, end)
-    l3_centrality = layer_3(start, end)
-    l4_centrality = layer_4(start, end)
+
+    sheet.append(titles)
+    l1_centrality = get_eg_file(1, "")
+    l2_d1_centrality = get_eg_file(2, "_d1")
+    l2_d2_centrality = get_eg_file(2, "_d2")
+    l3_centrality = get_eg_file(3, "")
+    l4_centrality = get_eg_file(4, "")
+    comb = get_eg_file("", "combined")
     avg_fixed = calculate_avg_fixed(start, end)
     avg_closed = calculate_avg_closed(start, end)
     avg_reopened = calculate_reopened(start, end)
@@ -805,13 +825,6 @@ if __name__ == '__main__':
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
-            # lst.append(layer_1_ii[j])
-            # lst.append(layer_2_d1_ii[j])
-            # lst.append(layer_2_d2_ii[j])
-            # lst.append(layer_3_ii[j])
-            # lst.append(layer_4_ii[j])
-            lst.append(cd1[j])
-            lst.append(cd2[j])
 
             print(lst)
             sheet.append(lst)
