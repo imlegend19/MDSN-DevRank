@@ -31,7 +31,7 @@ with db:
     for i in cur.fetchall():
         filtered_who.append(i[0])
 
-    cur.execute("SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005")
+    cur.execute("SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between 2002 and 2005")
 
     os_bug = {}
     for i in cur.fetchall():

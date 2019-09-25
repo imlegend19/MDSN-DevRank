@@ -27,8 +27,7 @@ def layer_1(start, end):
 
         print("\tSetting up dict for who_id's who have commented on same bug...")
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in "
-            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
                 start, end))
 
         filtered_who = []
@@ -53,7 +52,7 @@ def layer_1(start, end):
         print("\tFetching bugs from test_bug...")
         cur.execute(
             "SELECT distinct bug_id FROM test_bugs_fixed_closed where year(creation_ts) between " + str(
-                start) + " and " + str(end) + " and month(creation_ts) between 1 and 6")
+                start) + " and " + str(end))
 
         bugs = []
         for i in cur.fetchall():
@@ -81,7 +80,7 @@ def layer_1(start, end):
         graph.add_edges_from(list(edges))
 
         print("\tCalculating eigenvector centrality...")
-        centrality = nx.eigenvector_centrality_numpy(graph)
+        centrality = nx.eigenvector_centrality(graph)
 
         ec = sorted(('{:0.5f}'.format(c), v) for v, c in centrality.items())
         ec.reverse()
@@ -106,8 +105,7 @@ def layer_2_d1(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in "
-            "(select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
                 start, end))
 
         filtered_who = []
@@ -115,7 +113,7 @@ def layer_2_d1(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow product_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
+            "SELECT distinctrow product_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
         product_bug = {}
         for i in cur.fetchall():
@@ -194,7 +192,7 @@ def layer_2_d2(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
                 start, end))
 
         filtered_who = []
@@ -202,7 +200,7 @@ def layer_2_d2(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow product_id, component_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
+            "SELECT distinctrow product_id, component_id, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         prod_comp_bug = {}
@@ -281,7 +279,7 @@ def layer_3(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
                 start, end))
 
         filtered_who = []
@@ -289,7 +287,7 @@ def layer_3(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow reporter, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
+            "SELECT distinctrow reporter, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         reporter_bug = {}
@@ -368,7 +366,7 @@ def layer_4(start, end):
             dev.append(i[0])
 
         cur.execute(
-            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6)".format(
+            "select distinct who from test_longdescs_fixed_closed where bug_id in (select distinct bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1})".format(
                 start, end))
 
         filtered_who = []
@@ -377,7 +375,7 @@ def layer_4(start, end):
             filtered_who.append(i[0])
 
         cur.execute(
-            "SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 1 and 6".format(
+            "SELECT distinctrow op_sys, bug_id from test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         os_bug = {}
@@ -449,7 +447,7 @@ def calculate_avg_fixed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         assignee_bug = {}
@@ -511,7 +509,7 @@ def calculate_priority(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         assignees = []
@@ -519,7 +517,7 @@ def calculate_priority(start, end):
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, priority".format(
+            "select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} group by assigned_to, priority".format(
                 start, end))
 
         assignee_priority_cnt = {}
@@ -543,7 +541,7 @@ def calculate_severity(start, end):
     with db:
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+            "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         assignees = []
@@ -551,7 +549,7 @@ def calculate_severity(start, end):
             assignees.append(i[0])
 
         cur.execute(
-            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to, bug_severity".format(
+            "select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} group by assigned_to, bug_severity".format(
                 start, end))
 
         assignee_severity_cnt = {}
@@ -615,7 +613,7 @@ def calculate_reopened(start, end):
         cur = db.cursor()
 
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         assignee_bug = {}
@@ -677,7 +675,7 @@ def calculate_avg_closed(start, end):
         print("\tConnected to db...")
         cur = db.cursor()
         cur.execute(
-            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12".format(
+            "SELECT DISTINCTROW bug_id, assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between {0} and {1}".format(
                 start, end))
 
         assignee_bug = {}
@@ -737,7 +735,7 @@ def calculate_avg_closed(start, end):
 
 def calculate_components(start, end):
     cur.execute(
-        "select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} and month(creation_ts) between 7 and 12 group by assigned_to".format(
+        "select assigned_to, count(distinct component_id) from test_bugs_fixed_closed where year(creation_ts) between {0} and {1} group by assigned_to".format(
             start, end))
 
     assignee_comp = {}
@@ -748,50 +746,111 @@ def calculate_components(start, end):
     return assignee_comp
 
 
+def get_bets_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_eg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "eigenvector/eigenvector_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_cl_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "closeness/closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_deg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "degree/degree_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_hc_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "harmonic_closeness/harmonic_closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_pg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
+    with open(p + "pagerank/pagerank_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
 if __name__ == '__main__':
     wb = openpyxl.Workbook()
     sheet = wb.active
 
-    titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points', 'OI Layer 1', 'OI Layer 2-D1',
-              'OI Layer 2-D2', 'OI Layer 3', 'OI Layer 4']
+    titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Combined', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
+              'Total Components', 'Priority Points', 'Severity Points', 'Bet-L1', 'Bet-L2-D1', 'Bet-L2-D2', 'Bet-L3',
+              'Bet-L4', 'Bet-Comb', 'Close-L1', 'Close-L2-D1', 'Close-L2-D2', 'Close-L3', 'Close-L4', 'Close-Comb',
+              'H-Close-L1', 'H-Close-L2-D1', 'H-Close-L2-D2', 'H-Close-L3', 'H-Close-L4', 'H-Close-Comb', 'Page-L1',
+              'Page-L2-D1', 'Page-L2-D2', 'Page-L3', 'Page-L4', 'Page-Comb', 'Deg-L1', 'Deg-L2-D1', 'Deg-L2-D2',
+              'Deg-L3', 'Deg-L4', 'Deg-Comb']
 
-    PATH = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/overall_influence/'
-    # with open(PATH + "overall_influence_layer_1.txt", 'rb') as fp:
-    #     layer_1_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_2_d1.txt", 'rb') as fp:
-    #     layer_2_d1_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_2_d2.txt", 'rb') as fp:
-    #     layer_2_d2_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_3.txt", 'rb') as fp:
-    #     layer_3_ii = pickle.load(fp)
-    #
-    # with open(PATH + "overall_influence_layer_4.txt", 'rb') as fp:
-    #     layer_4_ii = pickle.load(fp)
-
-    with open(PATH + "overall_influence_combined_d1.txt", 'rb') as fp:
-        cd1 = pickle.load(fp)
-
-    with open(PATH + "overall_influence_combined_d2.txt", 'rb') as fp:
-        cd2 = pickle.load(fp)
-
-    sheet.append(titles)
     start = 2002
     end = 2004
-    l1_centrality = layer_1(start, end)
-    l2_d1_centrality = layer_2_d1(start, end)
-    l2_d2_centrality = layer_2_d2(start, end)
-    l3_centrality = layer_3(start, end)
-    l4_centrality = layer_4(start, end)
+
+    sheet.append(titles)
+    l1_centrality = get_eg_file(1, "")
+    l2_d1_centrality = get_eg_file(2, "_d1")
+    l2_d2_centrality = get_eg_file(2, "_d2")
+    l3_centrality = get_eg_file(3, "")
+    l4_centrality = get_eg_file(4, "")
+    comb = get_eg_file("", "combined")
     avg_fixed = calculate_avg_fixed(start, end)
     avg_closed = calculate_avg_closed(start, end)
     avg_reopened = calculate_reopened(start, end)
     components = calculate_components(start, end)
     priority = calculate_priority(start, end)
     severity = calculate_severity(start, end)
+    bet_l1 = get_bets_file(1, "")
+    bet_l2_d1 = get_bets_file(2, "_d1")
+    bet_l2_d2 = get_bets_file(2, "_d2")
+    bet_l3 = get_bets_file(3, "")
+    bet_l4 = get_bets_file(4, "")
+    bet_comb = get_bets_file("combined", "")
+    cl_l1 = get_cl_file(1, "")
+    cl_l2_d1 = get_cl_file(2, "_d1")
+    cl_l2_d2 = get_cl_file(2, "_d2")
+    cl_l3 = get_cl_file(3, "")
+    cl_l4 = get_cl_file(4, "")
+    cl_comb = get_cl_file("combined", "")
+    hcl_l1 = get_hc_file(1, "")
+    hcl_l2_d1 = get_hc_file(2, "_d1")
+    hcl_l2_d2 = get_hc_file(2, "_d2")
+    hcl_l3 = get_hc_file(3, "")
+    hcl_l4 = get_hc_file(4, "")
+    hcl_comb = get_hc_file("combined", "")
+    pg_l1 = get_pg_file(1, "")
+    pg_l2_d1 = get_pg_file(2, "_d1")
+    pg_l2_d2 = get_pg_file(2, "_d2")
+    pg_l3 = get_pg_file(3, "")
+    pg_l4 = get_pg_file(4, "")
+    pg_comb = get_pg_file("combined", "")
+    deg_l1 = get_deg_file(1, "")
+    deg_l2_d1 = get_deg_file(2, "_d1")
+    deg_l2_d2 = get_deg_file(2, "_d2")
+    deg_l3 = get_deg_file(3, "")
+    deg_l4 = get_deg_file(4, "")
+    deg_comb = get_deg_file("combined", '')
 
     for j in assignees:
         lst = []
@@ -802,20 +861,49 @@ if __name__ == '__main__':
             lst.append(l2_d2_centrality[j])
             lst.append(l3_centrality[j])
             lst.append(l4_centrality[j])
+            lst.append(comb[j])
             lst.append(avg_fixed[j])
             lst.append(avg_closed[j])
             lst.append(avg_reopened[j])
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
-            lst.append(cd1[j])
-            lst.append(cd2[j])
+            lst.append(bet_l1[j])
+            lst.append(bet_l2_d1[j])
+            lst.append(bet_l2_d2[j])
+            lst.append(bet_l3[j])
+            lst.append(bet_l4[j])
+            lst.append(bet_comb[j])
+            lst.append(cl_l1[j])
+            lst.append(cl_l2_d1[j])
+            lst.append(cl_l2_d2[j])
+            lst.append(cl_l3[j])
+            lst.append(cl_l4[j])
+            lst.append(cl_comb[j])
+            lst.append(hcl_l1[j])
+            lst.append(hcl_l2_d1[j])
+            lst.append(hcl_l2_d2[j])
+            lst.append(hcl_l3[j])
+            lst.append(hcl_l4[j])
+            lst.append(hcl_comb[j])
+            lst.append(pg_l1[j])
+            lst.append(pg_l2_d1[j])
+            lst.append(pg_l2_d2[j])
+            lst.append(pg_l3[j])
+            lst.append(pg_l4[j])
+            lst.append(pg_comb[j])
+            lst.append(deg_l1[j])
+            lst.append(deg_l2_d1[j])
+            lst.append(deg_l2_d2[j])
+            lst.append(deg_l3[j])
+            lst.append(deg_l4[j])
+            lst.append(deg_comb[j])
 
             print(lst)
             sheet.append(lst)
         except Exception:
             pass
 
-    wb.save("analysis_" + str(start) + "_" + str(end) + ".xlsx")
+    wb.save("analysis_" + str(start) + "_" + str(end) + "_gephi" + ".xlsx")
 
 print("Finished!")

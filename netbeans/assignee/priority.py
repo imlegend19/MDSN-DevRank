@@ -6,13 +6,13 @@ with db:
 
     cur.execute(
         "SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed "
-        "WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between 2001 and 2005")
+        "WHERE assigned_to IN (SELECT who FROM test_longdescs_fixed_closed) and year(creation_ts) between 2002 and 2005")
 
     assignees = []
     for i in cur.fetchall():
         assignees.append(i[0])
 
-    cur.execute("select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005 group by assigned_to, priority")
+    cur.execute("select assigned_to, priority, count(*) from test_bugs_fixed_closed where year(creation_ts) between 2002 and 2005 group by assigned_to, priority")
 
     assignee_priority_cnt = {}
 

@@ -4,13 +4,13 @@ from local_settings_netbeans import db
 with db:
     cur = db.cursor()
 
-    cur.execute("SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005")
+    cur.execute("SELECT DISTINCT assigned_to FROM test_bugs_fixed_closed where year(creation_ts) between 2002 and 2005")
 
     assignees = []
     for i in cur.fetchall():
         assignees.append(i[0])
 
-    cur.execute("select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005 "
+    cur.execute("select assigned_to, bug_severity, count(*) from test_bugs_fixed_closed where year(creation_ts) between 2002 and 2005 "
                 "group by assigned_to, bug_severity")
 
     assignee_severity_cnt = {}
