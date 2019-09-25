@@ -764,7 +764,15 @@ def get_eg_file(layer, end):
 
 def get_cl_file(layer, end):
     p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
-    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+    with open(p + "closeness/closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+        c = pickle.load(fp)
+
+    return c
+
+
+def get_deg_file(layer, end):
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    with open(p + "degree/degree_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
     return c
@@ -772,7 +780,7 @@ def get_cl_file(layer, end):
 
 def get_hc_file(layer, end):
     p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
-    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+    with open(p + "harmonic_closeness/harmonic_closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
     return c
@@ -780,7 +788,7 @@ def get_hc_file(layer, end):
 
 def get_pg_file(layer, end):
     p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
-    with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
+    with open(p + "pagerank/pagerank_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
     return c
@@ -791,7 +799,11 @@ if __name__ == '__main__':
     sheet = wb.active
 
     titles = ['Assignee', 'L1', 'L2 - D1', 'L2 - D2', 'L3', 'L4', 'Combined', 'Avg Fixed', 'Avg Closed', 'Avg Reopened',
-              'Total Components', 'Priority Points', 'Severity Points', 'Betweenness', 'Closeness', 'H-Closeness', 'Pagerank']
+              'Total Components', 'Priority Points', 'Severity Points', 'Bet-L1', 'Bet-L2-D1', 'Bet-L2-D2', 'Bet-L3',
+              'Bet-L4', 'Bet-Comb', 'Close-L1', 'Close-L2-D1', 'Close-L2-D2', 'Close-L3', 'Close-L4', 'Close-Comb',
+              'H-Close-L1', 'H-Close-L2-D1', 'H-Close-L2-D2', 'H-Close-L3', 'H-Close-L4', 'H-Close-Comb', 'Page-L1',
+              'Page-L2-D1', 'Page-L2-D2', 'Page-L3', 'Page-L4', 'Page-Comb', 'Deg-L1', 'Deg-L2-D1', 'Deg-L2-D2',
+              'Deg-L3', 'Deg-L4', 'Deg-Comb']
 
     start = 2001
     end = 2005
@@ -809,6 +821,36 @@ if __name__ == '__main__':
     components = calculate_components(start, end)
     priority = calculate_priority(start, end)
     severity = calculate_severity(start, end)
+    bet_l1 = get_bets_file(1, "")
+    bet_l2_d1 = get_bets_file(2, "_d1")
+    bet_l2_d2 = get_bets_file(2, "_d2")
+    bet_l3 = get_bets_file(3, "")
+    bet_l4 = get_bets_file(4, "")
+    bet_comb = get_bets_file("combined", "")
+    cl_l1 = get_cl_file(1, "")
+    cl_l2_d1 = get_cl_file(2, "_d1")
+    cl_l2_d2 = get_cl_file(2, "_d2")
+    cl_l3 = get_cl_file(3, "")
+    cl_l4 = get_cl_file(4, "")
+    cl_comb = get_cl_file("combined", "")
+    hcl_l1 = get_hc_file(1, "")
+    hcl_l2_d1 = get_hc_file(2, "_d1")
+    hcl_l2_d2 = get_hc_file(2, "_d2")
+    hcl_l3 = get_hc_file(3, "")
+    hcl_l4 = get_hc_file(4, "")
+    hcl_comb = get_hc_file("combined", "")
+    pg_l1 = get_pg_file(1, "")
+    pg_l2_d1 = get_pg_file(2, "_d1")
+    pg_l2_d2 = get_pg_file(2, "_d2")
+    pg_l3 = get_pg_file(3, "")
+    pg_l4 = get_pg_file(4, "")
+    pg_comb = get_pg_file("combined", "")
+    deg_l1 = get_deg_file(1, "")
+    deg_l2_d1 = get_deg_file(2, "_d1")
+    deg_l2_d2 = get_deg_file(2, "_d2")
+    deg_l3 = get_deg_file(3, "")
+    deg_l4 = get_deg_file(4, "")
+    deg_comb = get_deg_file("combined", '')
 
     for j in assignees:
         lst = []
@@ -819,18 +861,49 @@ if __name__ == '__main__':
             lst.append(l2_d2_centrality[j])
             lst.append(l3_centrality[j])
             lst.append(l4_centrality[j])
+            lst.append(comb[j])
             lst.append(avg_fixed[j])
             lst.append(avg_closed[j])
             lst.append(avg_reopened[j])
             lst.append(components[j])
             lst.append(priority[j])
             lst.append(severity[j])
+            lst.append(bet_l1[j])
+            lst.append(bet_l2_d1[j])
+            lst.append(bet_l2_d2[j])
+            lst.append(bet_l3[j])
+            lst.append(bet_l4[j])
+            lst.append(bet_comb[j])
+            lst.append(cl_l1[j])
+            lst.append(cl_l2_d1[j])
+            lst.append(cl_l2_d2[j])
+            lst.append(cl_l3[j])
+            lst.append(cl_l4[j])
+            lst.append(cl_comb[j])
+            lst.append(hcl_l1[j])
+            lst.append(hcl_l2_d1[j])
+            lst.append(hcl_l2_d2[j])
+            lst.append(hcl_l3[j])
+            lst.append(hcl_l4[j])
+            lst.append(hcl_comb[j])
+            lst.append(pg_l1[j])
+            lst.append(pg_l2_d1[j])
+            lst.append(pg_l2_d2[j])
+            lst.append(pg_l3[j])
+            lst.append(pg_l4[j])
+            lst.append(pg_comb[j])
+            lst.append(deg_l1[j])
+            lst.append(deg_l2_d1[j])
+            lst.append(deg_l2_d2[j])
+            lst.append(deg_l3[j])
+            lst.append(deg_l4[j])
+            lst.append(deg_comb[j])
 
             print(lst)
             sheet.append(lst)
         except Exception:
             pass
 
-    wb.save("analysis_" + str(start) + "_" + str(end) + ".xlsx")
+    wb.save("analysis_" + str(start) + "_" + str(end) + "_gephi" + ".xlsx")
 
 print("Finished!")
