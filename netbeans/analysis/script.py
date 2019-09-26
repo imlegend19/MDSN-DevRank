@@ -1,4 +1,5 @@
 import datetime
+import math
 import pickle
 from itertools import permutations
 
@@ -747,8 +748,63 @@ def calculate_components(start, end):
     return assignee_comp
 
 
+def calculate_entropy(edges, layer, other):
+    graph = nx.DiGraph()
+    graph.add_edges_from(edges)
+
+    degrees = {}
+    for (node, val) in graph.degree:
+        degrees[node] = val
+
+    entropy = {}
+    total = len(list(graph.nodes))
+    for i in graph.nodes:
+        print("Remaining:", total)
+        tot = sum(degrees.values())
+
+        e1 = 0
+        for j in graph.nodes:
+            pi = degrees[j] / tot
+            e1 += pi * math.log(pi, 10)
+
+        e1 = -e1
+
+        graph2 = nx.DiGraph()
+        graph2.add_edges_from(edges)
+        graph2.remove_node(i)
+
+        e2 = 0
+        deg = {}
+        for (node, val) in graph2.degree:
+            deg[node] = val
+
+        for j in graph2.nodes:
+            pi = deg[j] / tot
+            try:
+                e2 += pi * math.log(pi, 10)
+            except Exception:
+                pass
+
+        e2 = -e2
+        entropy[i] = e2 - e1
+        total -= 1
+
+    if layer is None:
+        with open("entropy_comb.txt", 'wb') as fp:
+            pickle.dump(entropy, fp)
+    else:
+        if not other:
+            with open("layer" + str(layer) + "_entropy.txt", 'wb') as fp:
+                pickle.dump(entropy, fp)
+        else:
+            with open("layer" + str(layer) + "_d2" + "_entropy.txt", 'wb') as fp:
+                pickle.dump(entropy, fp)
+
+    return entropy
+
+
 def get_bets_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
@@ -756,7 +812,7 @@ def get_bets_file(layer, end):
 
 
 def get_eg_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "eigenvector/eigenvector_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
@@ -764,7 +820,7 @@ def get_eg_file(layer, end):
 
 
 def get_cl_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "closeness/closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
@@ -772,7 +828,7 @@ def get_cl_file(layer, end):
 
 
 def get_deg_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "degree/degree_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
@@ -780,7 +836,7 @@ def get_deg_file(layer, end):
 
 
 def get_hc_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "harmonic_closeness/harmonic_closeness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
@@ -788,11 +844,35 @@ def get_hc_file(layer, end):
 
 
 def get_pg_file(layer, end):
-    p = '/home/niit1/PycharmProjects/Data-Mining-Research/netbeans/gephi_analysis/'
+    p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "pagerank/pagerank_layer_" + str(layer) + end + ".txt", 'rb') as fp:
         c = pickle.load(fp)
 
     return c
+
+
+def get_entropy(layer, end, is_comb):
+    if not is_comb:
+        with open("layer" + str(layer) + end + "_entropy" + ".txt", 'rb') as fp:
+            c = pickle.load(fp)
+    else:
+        with open("entropy_comb" + ".txt", 'rb') as fp:
+            c = pickle.load(fp)
+
+    return c
+
+
+def get_edges(layer, definition):
+    if definition == 'comb':
+        with open('/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/edges_comb.txt', 'rb') as fp:
+            edges = list(pickle.load(fp))
+
+        return edges
+    else:
+        with open('/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_' + str(definition) + '/layer' + str(layer) + '_edges_fc.txt', 'rb') as fp:
+            edges = list(pickle.load(fp))
+
+        return edges
 
 
 if __name__ == '__main__':
@@ -804,7 +884,7 @@ if __name__ == '__main__':
               'Bet-L4', 'Bet-Comb', 'Close-L1', 'Close-L2-D1', 'Close-L2-D2', 'Close-L3', 'Close-L4', 'Close-Comb',
               'H-Close-L1', 'H-Close-L2-D1', 'H-Close-L2-D2', 'H-Close-L3', 'H-Close-L4', 'H-Close-Comb', 'Page-L1',
               'Page-L2-D1', 'Page-L2-D2', 'Page-L3', 'Page-L4', 'Page-Comb', 'Deg-L1', 'Deg-L2-D1', 'Deg-L2-D2',
-              'Deg-L3', 'Deg-L4', 'Deg-Comb']
+              'Deg-L3', 'Deg-L4', 'Deg-Comb', 'Ent-L1', 'Ent-L2-D1', 'Ent-L2-D2', 'Ent-L3', 'Ent-L4', 'Ent-Comb']
 
     start = 2001
     end = 2005
@@ -852,6 +932,12 @@ if __name__ == '__main__':
     deg_l3 = get_deg_file(3, "")
     deg_l4 = get_deg_file(4, "")
     deg_comb = get_deg_file("combined", '')
+    ent_l1 = calculate_entropy(get_edges(1, 1), 1, False)
+    ent_l2_d1 = calculate_entropy(get_edges(2, 1), 2, False)
+    ent_l2_d2 = calculate_entropy(get_edges(2, 2), 2, True)
+    ent_l3 = calculate_entropy(get_edges(3, 1), 3, False)
+    ent_l4 = calculate_entropy(get_edges(4, 1), 4, False)
+    ent_comb = calculate_entropy(get_edges(1, 'comb'), None, False)
 
     for j in assignees:
         lst = []
@@ -899,6 +985,12 @@ if __name__ == '__main__':
             lst.append(deg_l3[j])
             lst.append(deg_l4[j])
             lst.append(deg_comb[j])
+            lst.append(ent_l1[j])
+            lst.append(ent_l2_d1[j])
+            lst.append(ent_l2_d2[j])
+            lst.append(ent_l3[j])
+            lst.append(ent_l4[j])
+            lst.append(ent_comb[j])
 
             print(lst)
             sheet.append(lst)

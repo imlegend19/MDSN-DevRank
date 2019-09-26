@@ -747,7 +747,7 @@ def calculate_components(start, end):
     return assignee_comp
 
 
-def calculate_entropy(edges):
+def calculate_entropy(edges, layer, other):
     graph = nx.DiGraph()
     graph.add_edges_from(edges)
 
@@ -756,7 +756,9 @@ def calculate_entropy(edges):
         degrees[node] = val
 
     entropy = {}
+    total = len(list(graph.nodes))
     for i in graph.nodes:
+        print("Remaining:", total)
         tot = sum(degrees.values())
 
         e1 = 0
@@ -766,7 +768,8 @@ def calculate_entropy(edges):
 
         e1 = -e1
 
-        graph2 = graph
+        graph2 = nx.DiGraph()
+        graph2.add_edges_from(edges)
         graph2.remove_node(i)
 
         e2 = 0
@@ -776,10 +779,25 @@ def calculate_entropy(edges):
 
         for j in graph2.nodes:
             pi = deg[j] / tot
-            e2 += pi * math.log(pi, 10)
+            try:
+                e2 += pi * math.log(pi, 10)
+            except Exception:
+                pass
 
         e2 = -e2
         entropy[i] = e2 - e1
+        total -= 1
+
+    if layer is None:
+        with open("entropy_comb.txt", 'wb') as fp:
+            pickle.dump(entropy, fp)
+    else:
+        if not other:
+            with open("layer" + str(layer) + "_entropy.txt", 'wb') as fp:
+                pickle.dump(entropy, fp)
+        else:
+            with open("layer" + str(layer) + "_d2" + "_entropy.txt", 'wb') as fp:
+                pickle.dump(entropy, fp)
 
     return entropy
 
@@ -832,14 +850,25 @@ def get_pg_file(layer, end):
     return c
 
 
+def get_entropy(layer, end, is_comb):
+    if not is_comb:
+        with open("layer" + str(layer) + end + "_entropy" + ".txt", 'rb') as fp:
+            c = pickle.load(fp)
+    else:
+        with open("entropy_comb" + ".txt", 'rb') as fp:
+            c = pickle.load(fp)
+
+    return c
+
+
 def get_edges(layer, definition):
     if definition == 'comb':
-        with open('eclipse/edges/edges_comb.txt', 'rb') as fp:
+        with open('/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/edges_comb.txt', 'rb') as fp:
             edges = list(pickle.load(fp))
 
         return edges
     else:
-        with open('eclipse/edges/definition_' + str(definition) + '/layer' + str(layer) + '_edges_fc.txt', 'rb') as fp:
+        with open('/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/edges/definition_' + str(definition) + '/layer' + str(layer) + '_edges_fc.txt', 'rb') as fp:
             edges = list(pickle.load(fp))
 
         return edges
@@ -902,12 +931,12 @@ if __name__ == '__main__':
     deg_l3 = get_deg_file(3, "")
     deg_l4 = get_deg_file(4, "")
     deg_comb = get_deg_file("combined", '')
-    ent_l1 = calculate_entropy(get_edges(1, 1))
-    ent_l2_d1 = calculate_entropy(get_edges(2, 1))
-    ent_l2_d2 = calculate_entropy(get_edges(2, 2))
-    ent_l3 = calculate_entropy(get_edges(3, 1))
-    ent_l4 = calculate_entropy(get_edges(4, 1))
-    ent_comb = calculate_entropy(get_edges(1, 'comb'))
+    ent_l1 = calculate_entropy(get_edges(1, 1), 1, False)
+    ent_l2_d1 = calculate_entropy(get_edges(2, 1), 2, False)
+    ent_l2_d2 = calculate_entropy(get_edges(2, 2), 2, True)
+    ent_l3 = calculate_entropy(get_edges(3, 1), 3, False)
+    ent_l4 = calculate_entropy(get_edges(4, 1), 4, False)
+    ent_comb = calculate_entropy(get_edges(1, 'comb'), None, False)
 
     for j in assignees:
         lst = []
