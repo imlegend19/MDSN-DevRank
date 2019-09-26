@@ -1,4 +1,5 @@
 import datetime
+import math
 import pickle
 from itertools import permutations
 
@@ -746,6 +747,43 @@ def calculate_components(start, end):
     return assignee_comp
 
 
+def calculate_entropy(edges):
+    graph = nx.DiGraph()
+    graph.add_edges_from(edges)
+
+    degrees = {}
+    for (node, val) in graph.degree:
+        degrees[node] = val
+
+    entropy = {}
+    for i in graph.nodes:
+        tot = sum(degrees.values())
+
+        e1 = 0
+        for j in graph.nodes:
+            pi = degrees[j] / tot
+            e1 += pi * math.log(pi, 10)
+
+        e1 = -e1
+
+        graph2 = graph
+        graph2.remove_node(i)
+
+        e2 = 0
+        deg = {}
+        for (node, val) in graph2.degree:
+            deg[node] = val
+
+        for j in graph2.nodes:
+            pi = deg[j] / tot
+            e2 += pi * math.log(pi, 10)
+
+        e2 = -e2
+        entropy[i] = e2 - e1
+
+    return entropy
+
+
 def get_bets_file(layer, end):
     p = '/home/niit1/PycharmProjects/Data-Mining-Research/eclipse/gephi_analysis/'
     with open(p + "betweenness/betweenness_layer_" + str(layer) + end + ".txt", 'rb') as fp:
@@ -794,6 +832,19 @@ def get_pg_file(layer, end):
     return c
 
 
+def get_edges(layer, definition):
+    if definition == 'comb':
+        with open('eclipse/edges/edges_comb.txt', 'rb') as fp:
+            edges = list(pickle.load(fp))
+
+        return edges
+    else:
+        with open('eclipse/edges/definition_' + str(definition) + '/layer' + str(layer) + '_edges_fc.txt', 'rb') as fp:
+            edges = list(pickle.load(fp))
+
+        return edges
+
+
 if __name__ == '__main__':
     wb = openpyxl.Workbook()
     sheet = wb.active
@@ -803,7 +854,7 @@ if __name__ == '__main__':
               'Bet-L4', 'Bet-Comb', 'Close-L1', 'Close-L2-D1', 'Close-L2-D2', 'Close-L3', 'Close-L4', 'Close-Comb',
               'H-Close-L1', 'H-Close-L2-D1', 'H-Close-L2-D2', 'H-Close-L3', 'H-Close-L4', 'H-Close-Comb', 'Page-L1',
               'Page-L2-D1', 'Page-L2-D2', 'Page-L3', 'Page-L4', 'Page-Comb', 'Deg-L1', 'Deg-L2-D1', 'Deg-L2-D2',
-              'Deg-L3', 'Deg-L4', 'Deg-Comb']
+              'Deg-L3', 'Deg-L4', 'Deg-Comb', 'Ent-L1', 'Ent-L2-D1', 'Ent-L2-D2', 'Ent-L3', 'Ent-L4', 'Ent-Comb']
 
     start = 2002
     end = 2004
@@ -851,6 +902,12 @@ if __name__ == '__main__':
     deg_l3 = get_deg_file(3, "")
     deg_l4 = get_deg_file(4, "")
     deg_comb = get_deg_file("combined", '')
+    ent_l1 = calculate_entropy(get_edges(1, 1))
+    ent_l2_d1 = calculate_entropy(get_edges(2, 1))
+    ent_l2_d2 = calculate_entropy(get_edges(2, 2))
+    ent_l3 = calculate_entropy(get_edges(3, 1))
+    ent_l4 = calculate_entropy(get_edges(4, 1))
+    ent_comb = calculate_entropy(get_edges(1, 'comb'))
 
     for j in assignees:
         lst = []
@@ -898,6 +955,12 @@ if __name__ == '__main__':
             lst.append(deg_l3[j])
             lst.append(deg_l4[j])
             lst.append(deg_comb[j])
+            lst.append(ent_l1[j])
+            lst.append(ent_l2_d1[j])
+            lst.append(ent_l2_d2[j])
+            lst.append(ent_l3[j])
+            lst.append(ent_l4[j])
+            lst.append(ent_comb[j])
 
             print(lst)
             sheet.append(lst)

@@ -38,7 +38,6 @@ for i in graph.nodes:
     local_influence += pi * log_pi
 
     loc[i] = -local_influence
-
     count -= 1
 
 print(loc)
