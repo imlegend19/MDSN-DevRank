@@ -1,4 +1,3 @@
-import pickle
 from itertools import permutations
 import openpyxl
 from local_settings_eclipse import db
@@ -423,12 +422,14 @@ def combined(year, phase):
 
 
 if __name__ == '__main__':
-    yr = 2004
-    ph = 1
+    yrs = [2005, 2006]
+    phs = [1, 2]
 
-    layer1(yr, ph)
-    layer2_d1(yr, ph)
-    layer2_d2(yr, ph)
-    layer3(yr, ph)
-    layer4(yr, ph)
-    combined(yr, ph)
+    for yr in yrs:
+        for ph in phs:
+            layer1(yr, ph)
+            layer2_d1(yr, ph)
+            layer2_d2(yr, ph)
+            layer3(yr, ph)
+            layer4(yr, ph)
+            combined(yr, ph)
