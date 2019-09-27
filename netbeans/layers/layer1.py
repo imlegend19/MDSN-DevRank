@@ -78,7 +78,7 @@ def layer1(product_id):
                 bugs_taken.append(i[0])
 
         print("Fetching bugs from test_bug...")
-        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed where year(creation_ts) between 2002 and 2005")
+        cur.execute("SELECT distinct bug_id FROM test_bugs_fixed_closed where year(creation_ts) between 2001 and 2005")
 
         bugs = []
         for i in cur.fetchall():
