@@ -1,2 +1,2 @@
 # Data-Mining-Research
-Attempt to rank the developers using multiplex network.
+Rank the developers using multiplex network (APSEC paper code).
